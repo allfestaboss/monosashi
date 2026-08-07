@@ -1,0 +1,252 @@
+<title>zeimu-bench 税務の根拠条文 — Z001 結果</title>
+<style>
+  :root{
+    --ground:#E6E3D6; --ground2:#DEDACB; --ink:#17160F; --ink-soft:#4A4739;
+    --rule:#C3BDA8; --verdigris:#3F5D4E; --ochre:#8F6B1F; --oxide:#8C3A26;
+    --indigo:#33445F; --chip:#D5D0BC;
+    --mincho:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;
+    --gothic:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+    --mono:ui-monospace,"SFMono-Regular",Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--ground:#14140F; --ground2:#1D1C16; --ink:#DDD9C9; --ink-soft:#9E9A88;
+      --rule:#3A382E; --verdigris:#7FA48E; --ochre:#C9A24F; --oxide:#C4705A;
+      --indigo:#8FA3C0; --chip:#26251D;}
+  }
+  :root[data-theme="dark"]{--ground:#14140F; --ground2:#1D1C16; --ink:#DDD9C9; --ink-soft:#9E9A88;
+    --rule:#3A382E; --verdigris:#7FA48E; --ochre:#C9A24F; --oxide:#C4705A;
+    --indigo:#8FA3C0; --chip:#26251D;}
+  :root[data-theme="light"]{--ground:#E6E3D6; --ground2:#DEDACB; --ink:#17160F; --ink-soft:#4A4739;
+    --rule:#C3BDA8; --verdigris:#3F5D4E; --ochre:#8F6B1F; --oxide:#8C3A26;
+    --indigo:#33445F; --chip:#D5D0BC;}
+
+  body{background:var(--ground);color:var(--ink);font-family:var(--gothic);
+       line-height:1.85;font-size:16px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:47rem;margin:0 auto;padding:4rem 1.5rem 6rem;
+        display:flex;flex-direction:column;gap:2.75rem;}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;
+           text-transform:uppercase;color:var(--verdigris);}
+  h1{font-family:var(--mincho);font-size:clamp(1.9rem,5vw,2.7rem);line-height:1.35;
+     font-weight:600;margin:.5rem 0 0;text-wrap:balance;letter-spacing:.01em;}
+  .sub{font-family:var(--mincho);font-size:1.05rem;color:var(--ink-soft);margin-top:.9rem;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:1.6rem;}
+  .meta{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;margin-top:1.4rem;
+        font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);}
+  section{display:flex;flex-direction:column;gap:1rem;}
+  h2{font-family:var(--mincho);font-size:1.3rem;font-weight:600;margin:0;
+     padding-bottom:.5rem;border-bottom:1px solid var(--rule);text-wrap:balance;}
+  h3{font-family:var(--gothic);font-size:.95rem;font-weight:700;margin:.6rem 0 -.3rem;
+     color:var(--verdigris);letter-spacing:.02em;}
+  p{margin:0;}
+  em{font-style:normal;background:linear-gradient(transparent 62%,var(--chip) 62%);font-weight:700;}
+  .scroll{overflow-x:auto;}
+  table{border-collapse:collapse;width:100%;font-size:.87rem;font-variant-numeric:tabular-nums;}
+  th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top;}
+  th{font-family:var(--mono);font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;
+     color:var(--ink-soft);font-weight:400;border-bottom:1px solid var(--ink);white-space:nowrap;}
+  td.num{font-family:var(--mono);white-space:nowrap;}
+  tr.win td{background:var(--ground2);}
+  tr.win td:first-child{box-shadow:inset 3px 0 0 var(--verdigris);font-weight:700;}
+  .dim{color:var(--ink-soft);}
+  .specimen{border:1px solid var(--rule);background:var(--ground2);
+            padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.55rem;}
+  .specimen .tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;
+                 text-transform:uppercase;color:var(--oxide);}
+  .specimen .head{font-family:var(--mincho);font-size:1.05rem;font-weight:600;}
+  .specimen p{font-size:.9rem;line-height:1.75;}
+  .figure{display:flex;flex-direction:column;gap:.3rem;border-left:3px solid var(--ochre);
+          padding:.2rem 0 .2rem 1rem;}
+  .figure .n{font-family:var(--mono);font-size:1.6rem;font-weight:600;
+             letter-spacing:-.01em;font-variant-numeric:tabular-nums;}
+  .figure .cap{font-size:.85rem;color:var(--ink-soft);line-height:1.6;}
+  .figrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:1.4rem;}
+  .pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:1px;
+        background:var(--rule);border:1px solid var(--rule);}
+  .pair > div{background:var(--ground);padding:1rem 1.1rem;
+              display:flex;flex-direction:column;gap:.35rem;}
+  .pair .k{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;color:var(--indigo);}
+  .pair .v{font-family:var(--mincho);font-size:1.02rem;font-weight:600;}
+  .pair .d{font-size:.84rem;color:var(--ink-soft);line-height:1.65;}
+  ol,ul{margin:0;padding-left:1.3rem;display:flex;flex-direction:column;gap:.5rem;}
+  ol.pred{list-style:none;padding-left:0;counter-reset:p;}
+  ol.pred li{counter-increment:p;padding-left:2.1rem;position:relative;}
+  ol.pred li::before{content:"予" counter(p);position:absolute;left:0;top:.1rem;
+    font-family:var(--mono);font-size:.68rem;color:var(--ochre);
+    border:1px solid var(--ochre);padding:.05rem .3rem;line-height:1.4;}
+  code{font-family:var(--mono);font-size:.85em;background:var(--chip);padding:.1em .35em;border-radius:2px;}
+  .status{display:flex;flex-direction:column;gap:.35rem;font-size:.9rem;}
+  .status div{display:flex;gap:.6rem;align-items:baseline;}
+  .status .mark{font-family:var(--mono);font-size:.8rem;color:var(--verdigris);}
+  .status .todo .mark{color:var(--oxide);}
+  footer{border-top:1px solid var(--rule);padding-top:1.2rem;
+         font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);line-height:1.8;}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">AI実務到達度インデックス／5本目</div>
+  <h1>zeimu-bench — 税務の根拠条文</h1>
+  <p class="sub">RAGは「出典を示す」ことで売られている。だが<strong>示した出典が、権威の依拠した条文と一致するかを誰も測っていない。</strong></p>
+  <div class="meta"><span>2026-08-06 着手</span><span>v0.1</span>
+    <span>出典：国税庁ホームページ</span></div>
+</header>
+
+<section>
+  <h2>何を測ったか</h2>
+  <p>国税庁「質疑応答事例」は1件ごとに<strong>【照会要旨】【回答要旨】【関係法令通達】</strong>を持つ。
+  照会文だけを渡し、<em>国税庁が根拠とした条文を言い当てられるか</em>を測る。参照解は国税庁が書いたもので、こちらは選ぶだけ。</p>
+  <p>母集団1,842件から、印紙税（【関係法令通達】の文法が別物）を除く8税目・1,487件を対象に、税目×引用本数帯で層別して<strong>78件・引用227本</strong>を抽出した。</p>
+  <div class="scroll">
+  <table>
+    <tr><th>段</th><th>何を問うか</th><th>配点</th></tr>
+    <tr><td class="num">Q0</td><td>全件に一度ずつ答えているか</td><td class="num">10</td></tr>
+    <tr><td class="num">Q1</td><td>引用の形式・法令名が実在するか</td><td class="num">15</td></tr>
+    <tr><td class="num">Q2</td><td>法令名が合っているか</td><td class="num">20</td></tr>
+    <tr class="win"><td class="num">Q3</td><td>条・項・号が合っているか（深さで傾斜）</td><td class="num">55</td></tr>
+  </table>
+  </div>
+  <p class="dim" style="font-size:.87rem">答えが<strong>集合</strong>なので、再現率だけで採ると思いつく条文を全部並べた提出が満点近くを取る。適合率を必ず抱き合わせ、散弾は失格にした。較正100/100・敵対テスト10ケース通過。</p>
+</section>
+
+<section>
+  <h2>資料を80倍にしても上がらない</h2>
+  <div class="scroll">
+  <table>
+    <tr><th>腕</th><th>渡した資料</th><th>合計</th><th>法令名</th><th>条</th><th>項</th><th>号</th></tr>
+    <tr><td>armA 記憶のみ</td><td class="dim">なし</td><td class="num">72.3</td><td class="num">78%</td><td class="num">56%</td><td class="num">41%</td><td class="num">35%</td></tr>
+    <tr><td>armB 候補5本</td><td class="num">30万字（RAG相当）</td><td class="num">74.0</td><td class="num">80%</td><td class="num">60%</td><td class="num">40%</td><td class="num">37%</td></tr>
+    <tr><td>armC 全文</td><td class="num">2,400万字</td><td class="num">73.1</td><td class="num">74%</td><td class="num">53%</td><td class="num">39%</td><td class="num">35%</td></tr>
+    <tr><td>armC 修正版</td><td class="num">2,500万字</td><td class="num">72.0</td><td class="num">74%</td><td class="num">52%</td><td class="num">36%</td><td class="num">33%</td></tr>
+  </table>
+  </div>
+  <p>途中で被覆率を79%→83%、所得税基本通達を671→1,098項（+64%）まで改善したが、点数はむしろ下がった。</p>
+
+  <h3>その差は、ばらつきの中だった（n=5）</h3>
+  <div class="figrow">
+    <div class="figure"><span class="n">72.8–75.0</span><span class="cap">同一条件5回の幅<br>SD 0.76</span></div>
+    <div class="figure"><span class="n">72.0–74.0</span><span class="cap">4条件の差<br><strong>揺れと同じ大きさ</strong></span></div>
+  </div>
+  <p><em>腕の間に差があるとは言えない。「資料を増やしても上がらない」だけが言える。</em>kanzei-bench で「42点が3回続いたが実は範囲の上端だった」と後から判明した失敗を踏まえ、今回は先に測った。</p>
+</section>
+
+<section>
+  <h2>点数は安定、答えは毎回ちがう</h2>
+  <div class="scroll">
+  <table>
+    <tr><th></th><th>run1</th><th>run2</th><th>run3</th><th>run4</th><th>run5</th></tr>
+    <tr><td>得点</td><td class="num">73.7</td><td class="num">72.8</td><td class="num">73.1</td><td class="num">75.0</td><td class="num">73.7</td></tr>
+    <tr class="win"><td>引用の的中</td><td class="num">125</td><td class="num">124</td><td class="num">124</td><td class="num">124</td><td class="num">124</td></tr>
+  </table>
+  </div>
+  <p>的中数は<strong>124本±1で不動</strong>。ところが——</p>
+  <div class="pair">
+    <div><span class="k">全回一致した事案</span><span class="v">20 / 78（26%）</span><span class="d">引用の集合が5回とも同じ</span></div>
+    <div><span class="k">割れた事案</span><span class="v">58 / 78（74%）</span><span class="d">2〜4通りに分かれる</span></div>
+    <div><span class="k">1回でも当てた引用</span><span class="v">148 / 227（65%）</span><span class="d">最良の単発は 125（55%）</span></div>
+    <div><span class="k">毎回当てた引用</span><span class="v">96 / 227（42%）</span><span class="d">52本が当たったり外れたり</span></div>
+  </div>
+  <p><em>毎回ほぼ同じ点数を、毎回ちがう答えで取っている。</em>52本の引用が run ごとに入れ替わり、合計だけが釣り合う。kanzei-bench では割れが25%だった。<strong>税務は74%</strong>——答えが1個のコードではなく集合なので、揺れる幅が桁違いに大きい。</p>
+  <div class="specimen">
+    <span class="tag">同じ資料を読んで逆の結論</span>
+    <span class="head">区画整理の建物取壊し補償金</span>
+    <p><strong>run3</strong>: 措法33条1項3号の5 は文言上「土地等」限定 → <strong>適用なし</strong>（照会者の見解どおり）<br>
+    <strong>run5</strong>: 同じ条文だが 措通33-14《引き家補償等の名義で交付を受ける補償金》を根拠に → <strong>適用あり</strong></p>
+    <p class="dim">死亡と修正申告期限の2件（joto_19_07/19_08）は run2・run3・run5 で3通りに割れた。</p>
+  </div>
+  <p>税務・監査のように<strong>「同じ問いに同じ答えが返ること」自体が要件</strong>になる場面では、精度以前の問題になる。</p>
+</section>
+
+<section>
+  <h2>RAGが外すのは「拾えていない」側</h2>
+  <div class="scroll">
+  <table>
+    <tr><th></th><th>本数</th><th>腕が引用できた</th></tr>
+    <tr class="win"><td>候補に入っていた正解</td><td class="num">80</td><td class="num">69（<strong>86%</strong>）</td></tr>
+    <tr><td>候補に入っていなかった正解</td><td class="num">147</td><td class="num">70（48%）← 記憶からの上乗せ</td></tr>
+  </table>
+  </div>
+  <p><em>腕は、渡されたものは86%拾う。選べていないのではなく、渡せていない。</em>そして候補由来69本に対し記憶由来70本——<strong>「RAGの腕」は成績の半分以上を記憶で稼いでいる。</strong></p>
+  <p class="dim">自己申告との突き合わせも示唆的だった。「候補を主に使った」45件の的中61%、「記憶で補った」33件の的中62%。<strong>差が無い。</strong></p>
+</section>
+
+<section>
+  <h2>検索が効かない理由は「法の構造」だった</h2>
+  <p>腕を走らせる<strong>前</strong>に測った。照会文から機械的に候補を引いたときの、正解が候補に入る率。</p>
+  <div class="scroll">
+  <table>
+    <tr><th>候補数/事案</th><th>5</th><th>10</th><th>20</th><th>40</th></tr>
+    <tr><td>正解が入る率</td><td class="num">35.7%</td><td class="num">45.8%</td><td class="num">53.7%</td><td class="num">55.9%</td></tr>
+  </table>
+  </div>
+  <p><strong>20→40件で2.2ポイントしか伸びない。</strong>予算ではなく質の問題。落とした55本を分類すると:</p>
+  <ul>
+    <li><strong>80%は、照会文より回答文のほうが条文に近い</strong>＝答えを知らないと引けない</li>
+    <li><strong>抽象度が高いほど落ちる</strong>——総則50% / 定義40% / 通達29% / 本則24% / <strong>施行令12%</strong>。
+      いちばん拾えるのが政令なのは「次に掲げるもの」と具体を列挙するから</li>
+    <li><strong>短い条文ほど落ちる</strong>（616字 対 3,035字）。長さのペナルティではなく<em>照合できる語の不足</em>。予想と逆だった</li>
+  </ul>
+  <p>数字にならないが実例で見えるもの——<strong>参照の連鎖</strong>（所得税法225条は照会文に「支払調書」と書いてあるのに落ちる。効くのは225条が使う語の定義である2条で、2条は全定義を並べた巨大な条だからどの問いとも重ならない）。<strong>前提要件の条</strong>（所得税法4条「人格のない社団等は法人とみなす」。照会文に「人格のない社団」は出てこない）。</p>
+  <p><em>効く条文は (a)抽象的で (b)短く (c)他の条から参照されて初めて登場する。3つとも単発のキーワード検索と相性が悪い。</em></p>
+</section>
+
+<section>
+  <h2>予想の答え合わせ — 4つ中1つ外れ</h2>
+  <ol class="pred">
+    <li><strong>当たり。</strong>深さで階段状に落ちる。法令名78% → 条56% → 項41% → 号35%</li>
+    <li><strong>外れ、しかも逆。</strong>「通達番号は意味を持たない識別子だから条文より当たらない」→ <strong>通達44% 対 法令32%</strong>。理由は暗記のしやすさではなく<em>当てるべき階層の数</em>で、通達は1階層、法令は条・項・号の3階層。条だけなら法令も61%当たっている</li>
+    <li><strong>弱い当たり。</strong>有名条文への引き寄せはあるが小規模（消費税法4条×5）。ただし民法887条×3 は種類の違う誤り（税法の中で答えるべき場面から外に出ている）</li>
+    <li><strong>当たり。</strong>散弾にならず、むしろ控えめ（1件2.3本 対 参照解2.9本）</li>
+  </ol>
+</section>
+
+<section>
+  <h2>2業種で揃った</h2>
+  <div class="scroll">
+  <table>
+    <tr><th>業種</th><th>資料の増やし方</th><th>結果</th></tr>
+    <tr><td>通関 HS分類</td><td>81万字 → 440万字（5.4倍）</td><td class="num">9桁 42→42（<strong>0件</strong>）</td></tr>
+    <tr><td>税務 根拠条文</td><td>ゼロ → RAG候補30万字</td><td class="num">72.3 → 74.0</td></tr>
+    <tr><td>税務 根拠条文</td><td>RAG → 全文（80倍）</td><td class="num">74.0 → 73.1</td></tr>
+    <tr class="win"><td>税務 根拠条文</td><td>欠陥修正（被覆79→83%）</td><td class="num">73.1 → <strong>72.0</strong></td></tr>
+  </table>
+  </div>
+  <p><strong>「増やす」を5通りやって5回とも空振り。</strong>そして両方の業種で、同一条件の反復が不安定だった（通関25% / 税務74%）。</p>
+</section>
+
+<section>
+  <h2>出題側の欠陥 — 通算44件</h2>
+  <p>被験者（腕）が出題者を44回監査した。<strong>壊れ方が全部同じ型だった。</strong></p>
+  <div class="specimen">
+    <span class="tag">共通する型</span>
+    <span class="head">実物を見ずに構造を仮定し、例外を投げずに「正常終了」する</span>
+    <p>索引が1段だと決めつけ（0節で正常終了）、ファイル名が数字だと決めつけ、URLが <code>.htm</code> で終わると決めつけ（アンカー付きで全滅）、目次のファイル名を推測（索引が空のまま成功）、表のセルを項番として登録（本物の項を覆い隠す）。<strong>4回とも、実物のリンクを数えた瞬間に原因が分かった。推測で直そうとした回はすべて外している。</strong></p>
+  </div>
+  <div class="specimen">
+    <span class="tag">被験者の指摘は氷山の一角</span>
+    <span class="head">「補塡の塡が欠落」→ 項番と算式が全部落ちていた</span>
+    <p>追うと1文字の話ではなかった。国税庁のページは Shift_JIS に無い字だけでなく<strong>丸数字の項番と算式も画像で埋めている</strong>。タグごと捨てていたので、通達本文から構造が消えていた。</p>
+    <p>armB の「27-6 が 27 になっている」と armC の「20・25・89 が欠落」も、<strong>別々の症状に見えて原因は1つ</strong>だった——番号がタグで分断され（<code>&lt;strong&gt;20&lt;/strong&gt;&lt;strong&gt;－2&lt;/strong&gt;</code>）、20/20-2/…/20-7 が全部キー「20」に潰れて最後の1つしか残らない。<strong>私の最初の修正は、上書きで消えた後に効かせようとしていた。順番が違っていた。</strong></p>
+  </div>
+</section>
+
+<section>
+  <h2>現在地と、残している弱点</h2>
+  <div class="status">
+    <div><span class="mark">[x]</span><span>参照解の収穫　国税庁 質疑応答事例 <strong>1,842件</strong>（9税目）</span></div>
+    <div><span class="mark">[x]</span><span>資料　法令15本6,431条（e-Gov API）＋通達8系統（国税庁）＝<strong>9,988項/25MB</strong></span></div>
+    <div><span class="mark">[x]</span><span>採点器・較正（100/100）・敵対テスト（10ケース）</span></div>
+    <div><span class="mark">[x]</span><span><strong>4条件</strong>（記憶のみ／RAG／全文／修正版）＋ <strong>n=5</strong></span></div>
+    <div class="todo"><span class="mark">[ ]</span><span>結論の一致（副軸）　判定器の較正が通っていないので出していない</span></div>
+    <div class="todo"><span class="mark">[ ]</span><span>措置法関係通達が実質空。譲渡所得12件＋住宅ローン控除4件が構造的に裏取り不能</span></div>
+    <div class="todo"><span class="mark">[ ]</span><span>n=5 でまた汚染。作業場は分けたが、<strong>腕が自分の判断で共有領域に道具を書いた</strong></span></div>
+  </div>
+  <p class="dim" style="font-size:.87rem">結論の抽出を素朴にやると失敗することも実測した。「その保険金は非課税とされます」は<strong>肯定文で否定の結論</strong>。文の極性と結論の極性が一致せず、22%は定型ですらない。ここを人手で仕分けると「参照解を自分で書く」に逆戻りするのでやらない。</p>
+</section>
+
+<footer>
+  出典：国税庁ホームページ（https://www.nta.go.jp/）／e-Gov法令検索（https://laws.e-gov.go.jp/）<br>
+  データは同ホームページの情報を加工して作成　—　関連：cad-bench・sekisan-bench・doboku-bench・kanzei-bench
+</footer>
+
+</div>

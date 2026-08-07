@@ -1,0 +1,436 @@
+<title>kanzei-bench 通関HS分類 — K001/K002/n=5 結果</title>
+<style>
+  :root{
+    --ground:#E6E3D6; --ground2:#DEDACB; --ink:#17160F; --ink-soft:#4A4739;
+    --rule:#C3BDA8; --verdigris:#3F5D4E; --ochre:#8F6B1F; --oxide:#8C3A26;
+    --indigo:#33445F; --chip:#D5D0BC;
+    --mincho:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;
+    --gothic:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+    --mono:ui-monospace,"SFMono-Regular",Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --ground:#14140F; --ground2:#1D1C16; --ink:#DDD9C9; --ink-soft:#9E9A88;
+      --rule:#3A382E; --verdigris:#7FA48E; --ochre:#C9A24F; --oxide:#C4705A;
+      --indigo:#8FA3C0; --chip:#26251D;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#14140F; --ground2:#1D1C16; --ink:#DDD9C9; --ink-soft:#9E9A88;
+    --rule:#3A382E; --verdigris:#7FA48E; --ochre:#C9A24F; --oxide:#C4705A;
+    --indigo:#8FA3C0; --chip:#26251D;
+  }
+  :root[data-theme="light"]{
+    --ground:#E6E3D6; --ground2:#DEDACB; --ink:#17160F; --ink-soft:#4A4739;
+    --rule:#C3BDA8; --verdigris:#3F5D4E; --ochre:#8F6B1F; --oxide:#8C3A26;
+    --indigo:#33445F; --chip:#D5D0BC;
+  }
+
+  body{background:var(--ground);color:var(--ink);font-family:var(--gothic);
+       line-height:1.85;font-size:16px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:47rem;margin:0 auto;padding:4rem 1.5rem 6rem;
+        display:flex;flex-direction:column;gap:2.75rem;}
+
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;
+           text-transform:uppercase;color:var(--verdigris);}
+  h1{font-family:var(--mincho);font-size:clamp(1.9rem,5vw,2.7rem);line-height:1.35;
+     font-weight:600;margin:.5rem 0 0;text-wrap:balance;letter-spacing:.01em;}
+  .sub{font-family:var(--mincho);font-size:1.05rem;color:var(--ink-soft);margin-top:.9rem;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:1.6rem;}
+  .meta{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;margin-top:1.4rem;
+        font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);}
+
+  section{display:flex;flex-direction:column;gap:1rem;}
+  h2{font-family:var(--mincho);font-size:1.3rem;font-weight:600;margin:0;
+     padding-bottom:.5rem;border-bottom:1px solid var(--rule);text-wrap:balance;}
+  h3{font-family:var(--gothic);font-size:.95rem;font-weight:700;margin:.6rem 0 -.3rem;
+     color:var(--verdigris);letter-spacing:.02em;}
+  p{margin:0;}
+  strong{font-weight:700;}
+  em{font-style:normal;background:linear-gradient(transparent 62%,var(--chip) 62%);
+     font-weight:700;}
+
+  .scroll{overflow-x:auto;}
+  table{border-collapse:collapse;width:100%;font-size:.87rem;
+        font-variant-numeric:tabular-nums;}
+  th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--rule);
+        vertical-align:top;}
+  th{font-family:var(--mono);font-size:.7rem;letter-spacing:.09em;
+     text-transform:uppercase;color:var(--ink-soft);font-weight:400;
+     border-bottom:1px solid var(--ink);white-space:nowrap;}
+  td.num{font-family:var(--mono);white-space:nowrap;}
+  tr.win td{background:var(--ground2);}
+  tr.win td:first-child{box-shadow:inset 3px 0 0 var(--verdigris);font-weight:700;}
+  .dim{color:var(--ink-soft);}
+
+  /* 標本ラベル — 潰した穴の記録 */
+  .specimen{border:1px solid var(--rule);background:var(--ground2);
+            padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.55rem;}
+  .specimen .tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;
+                 text-transform:uppercase;color:var(--oxide);}
+  .specimen .head{font-family:var(--mincho);font-size:1.05rem;font-weight:600;}
+  .specimen p{font-size:.9rem;line-height:1.75;}
+  .arrow{font-family:var(--mono);font-size:.85rem;color:var(--ink-soft);}
+  .arrow b{color:var(--verdigris);}
+
+  .figure{display:flex;flex-direction:column;gap:.3rem;border-left:3px solid var(--ochre);
+          padding:.2rem 0 .2rem 1rem;}
+  .figure .n{font-family:var(--mono);font-size:1.6rem;font-weight:600;
+             letter-spacing:-.01em;font-variant-numeric:tabular-nums;}
+  .figure .cap{font-size:.85rem;color:var(--ink-soft);line-height:1.6;}
+  .figrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:1.4rem;}
+
+  .pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1px;
+        background:var(--rule);border:1px solid var(--rule);}
+  .pair > div{background:var(--ground);padding:1rem 1.1rem;
+              display:flex;flex-direction:column;gap:.35rem;}
+  .pair .k{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;color:var(--indigo);}
+  .pair .v{font-family:var(--mincho);font-size:1.02rem;font-weight:600;}
+  .pair .d{font-size:.84rem;color:var(--ink-soft);line-height:1.65;}
+
+  ol,ul{margin:0;padding-left:1.3rem;display:flex;flex-direction:column;gap:.5rem;}
+  li{padding-left:.2rem;}
+  ol.pred{list-style:none;padding-left:0;counter-reset:p;}
+  ol.pred li{counter-increment:p;padding-left:2.1rem;position:relative;}
+  ol.pred li::before{content:"予" counter(p);position:absolute;left:0;top:.1rem;
+    font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;color:var(--ochre);
+    border:1px solid var(--ochre);padding:.05rem .3rem;line-height:1.4;}
+
+  code{font-family:var(--mono);font-size:.85em;background:var(--chip);
+       padding:.1em .35em;border-radius:2px;}
+  .status{display:flex;flex-direction:column;gap:.35rem;font-size:.9rem;}
+  .status div{display:flex;gap:.6rem;align-items:baseline;}
+  .status .mark{font-family:var(--mono);font-size:.8rem;color:var(--verdigris);}
+  .status .todo .mark{color:var(--oxide);}
+  footer{border-top:1px solid var(--rule);padding-top:1.2rem;
+         font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);line-height:1.8;}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">AI実務到達度インデックス／4本目</div>
+  <h1>kanzei-bench — 通関HS分類</h1>
+  <p class="sub">参照解を初めて外部化した。前3本は自分で答えを書いていて、その答えが3回間違っていた。<br>結果は積算と正反対で、<strong>権威を渡しても正答率が上がらなかった。</strong></p>
+  <div class="meta">
+    <span>2026-08-04 着手</span><span>v0.4</span>
+    <span>~/dev/01_projects/big-business/kanzei-bench</span>
+  </div>
+</header>
+
+<section>
+  <h2>なぜ通関を選んだか</h2>
+  <p>4候補を「公的基準があるか」ではなく <em>権威が確定させた正解の集合が公開されているか</em> で比べた。決め手はこれ一本で付いた。</p>
+  <div class="scroll">
+  <table>
+    <tr><th>候補</th><th>基準</th><th>照合先</th><th>判定</th></tr>
+    <tr class="win"><td>通関HS分類</td><td>実行関税率表・通則・部注類注</td>
+      <td>税関 事前教示回答（外部・権威・日付つき）</td><td>採用</td></tr>
+    <tr><td>給与・社会保険</td><td>労働法令・保険料額表</td>
+      <td class="dim">疑義照会・事務取扱事例集（断片的）</td><td class="dim">次点</td></tr>
+    <tr><td>診療報酬レセプト</td><td>医科点数表（令和8年度改定）</td>
+      <td class="dim">電子点数表に算定ルールはあるが、症例→レセプトの正解集合が非公開</td>
+      <td class="dim">参照解が自作になる</td></tr>
+    <tr><td>消防設備点検</td><td>消防庁告示第14号</td>
+      <td class="dim">「この建物→この点検結果」の公開集合が無い</td>
+      <td class="dim">参照解が自作になる</td></tr>
+  </table>
+  </div>
+  <p>1件ごとに <strong>貨物概要</strong>（性状・材質・用途・包装・製法）と <strong>税番9桁</strong> と <strong>分類理由</strong>（通則を名指しで引用）が揃っている。こちらは<strong>選ぶだけで、書かない</strong>。</p>
+</section>
+
+<section>
+  <h2>この業種だけが持っている構造：基準がプロンプトに入らない</h2>
+  <p>着手して最初に分かったのがこれで、実験の設計が変わった。</p>
+  <div class="figrow">
+    <div class="figure"><span class="n">約2万字</span>
+      <span class="cap">積算の基準（抜粋）。<br>プロンプトに貼れる</span></div>
+    <div class="figure"><span class="n">812,140字</span>
+      <span class="cap">通関：関税率表＋通則＋部注類注。<br>約57万トークン。貼れない</span></div>
+    <div class="figure"><span class="n">4,367,866字</span>
+      <span class="cap">通関：税関が実際に引く権威の全体。<br>約310万トークン。<strong>1Mにも入らない</strong></span></div>
+  </div>
+  <p class="dim" style="font-size:.87rem">下段は <strong>K001 を走らせてから判明した</strong>。着手時は上段（81万字）を全量と考えており、関税率表解説296万字と分類例規60万字を勘定に入れていなかった。詳細は「出題側の欠陥」。</p>
+  <p>積算では「条文を渡す／渡さない」が実験の操作として成立した。通関では成立しない。9,654品目の関税率表を丸ごと渡せないので、<em>armB→armC の差は「知識の有無」ではなく「検索できるかどうか」</em>になる。</p>
+  <p>sekisan-bench の結論「知識を渡す価値は、その知識の有名度に反比例する」は、<strong>知識が渡せる大きさであることを暗黙の前提にしていた</strong>。ここでその前提が外れる。</p>
+</section>
+
+<section>
+  <h2>腕は4本</h2>
+  <p>sekisan は3腕（条文なし／条文あり／条文＋検査器）で切ったが、知識と実行を1本に束ねていた。</p>
+  <div class="scroll">
+  <table>
+    <tr><th>腕</th><th>記憶</th><th>条文</th><th>関税率表</th><th>コード実行</th><th>検査器</th></tr>
+    <tr><td>armA</td><td class="num">○</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td></tr>
+    <tr><td>armB</td><td class="num">○</td><td class="num">通則のみ</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td></tr>
+    <tr><td>armC</td><td class="num">○</td><td class="num">全部</td><td class="num">全部</td><td class="num">○</td><td class="dim">—</td></tr>
+    <tr><td>armD</td><td class="num">○</td><td class="num">全部</td><td class="num">全部</td><td class="num">○</td><td class="num">○</td></tr>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>カットオフ前後で切る — 既存3本で測れなかった軸</h2>
+  <p>処理年月日で絞れるので、モデルの知識カットオフ（2026年5月）より後に処理された事例だけを取り出せる。<strong>学習データに入りようがない事例</strong>である。</p>
+  <div class="pair">
+    <div><span class="k">K001 — カットオフ後</span>
+      <span class="v">2026-06-01 〜 07-31</span>
+      <span class="d">61件／通則3が8件。処理も公開もカットオフ後。暗記が原理的にありえない</span></div>
+    <div><span class="k">K002 — カットオフ前</span>
+      <span class="v">2024-06-03 〜 07-31</span>
+      <span class="d">61件／通則3が8件。遅くとも2025年1月には公開済み。1年以上の学習機会がある</span></div>
+  </div>
+  <p>層は揃えてある（通則3の要否 × 漏洩帯の6層が同数）。条文はHS2022で両年とも同一。参照解の税番は両方とも2026年8月1日版に実在することを確認済み。<em>したがって K001 と K002 の差は暗記の効果に帰せられる。</em></p>
+  <p class="dim" style="font-size:.87rem">ただし片側だけの検定である。差が出なければ「暗記していない」と言えるが、差が出たときに暗記以外の説明（2年で貨物の傾向が変わった等）を排除しきれない。</p>
+</section>
+
+<section>
+  <h2>課題が成立するかを先に測った</h2>
+  <p>貨物概要は税関が分類を決めた<strong>後に</strong>書いた要約なので、関税率表の言い回しに翻訳済みならベンチとして何も測れない。答えの語が貨物概要にそのまま出ている割合を実測した。</p>
+  <div class="scroll">
+  <table>
+    <tr><th>漏洩帯</th><th>件数</th><th>中身</th></tr>
+    <tr><td class="num">0.8以上</td><td class="num">0件（0%）</td><td class="dim">該当なし</td></tr>
+    <tr><td class="num">0.5–0.8</td><td class="num">27件（11%）</td><td>リキュール→2208.70「リキュール」。一般名が項名と同じ品</td></tr>
+    <tr><td class="num">0.2–0.5</td><td class="num">67件（28%）</td><td class="dim">—</td></tr>
+    <tr class="win"><td class="num">0.2未満</td><td class="num">147件（61%）</td><td>「保温パック」のように関税率表の言葉に一度も触れない品</td></tr>
+  </table>
+  </div>
+  <p>中央値0.12。<strong>0.8を超える事例は1件も無い。</strong>翻訳済みではないので成立する。高漏洩帯は実質「名前を引くだけ」なので層として分けて数える。</p>
+</section>
+
+<section>
+  <h2>採点の前に潰した2つの穴</h2>
+  <p><code>run.sh</code> は採点の前に較正（税関の回答が満点を取るか）と敵対テスト（採点器が騙されないか）を通す。どちらも初回で落ちた。</p>
+
+  <div class="specimen">
+    <span class="tag">較正で捕まえた</span>
+    <span class="head">登録番号が一意ではなかった</span>
+    <p>1件の照会に対し、税関が<strong>4つの税番</strong>を返していた。セットを通則3(b)で括らず、脱臭除湿剤／結束バンド／メッセージカード／封筒に分けて分類した事例。登録番号をキーにすると3件が消える。</p>
+    <span class="arrow">98.04 / 100 &nbsp;→&nbsp; <b>100 / 100</b>　キーを詳細ページIDに変更</span>
+    <p class="dim">較正の門が無ければ、61件のはずの課題が58件で走っていた。較正は参照解の中身は検査できないが、<strong>構造は検査できる</strong>。</p>
+  </div>
+
+  <div class="specimen">
+    <span class="tag">敵対テストで捕まえた</span>
+    <span class="head">空の提出が 17.4 点を取った</span>
+    <p>通則3が要る事案は全体の13%しかない。素朴に「一致件数÷全件」にすると、<strong>全件「通則3は不要」と黙っているだけで87%取れる</strong>。回答が無いことが「通則3を引いていない」と読まれていた。</p>
+    <span class="arrow">17.4 / 100 &nbsp;→&nbsp; <b>0.0 / 100</b>　不作為を無得点にし、2クラスの再現率の平均に</span>
+    <p class="dim">sekisan で単位未換算の調書が 57.7 点を取った穴と同型。敵対テストを書くまで気づかない類のもの。</p>
+  </div>
+
+  <p>ほかに <em>6桁まで全問正解で統計細分だけ捏造した調書は 73/100 を取る</em>。9桁が実在しなければ NACCS が受け付けないので実務ではゼロ。合計点とは別に失格として立ててある。敵対テストは8ケース全通過。</p>
+</section>
+
+<section>
+  <h2>先に書いておく予想</h2>
+  <p>当たっても外れても、そのまま公開する。sekisan S001 では3つ立てて3つとも外れた。</p>
+  <ol class="pred">
+    <li><strong>armA は9桁でほぼ全滅する。</strong>国内細分の3桁は日本固有で、記憶で当たる類のものではない。ただし6桁（国際共通のHS）ではそれなりに当てると見ている。</li>
+    <li><strong>armB は armA とほとんど変わらない。</strong>通則は分類の手続きを定めるだけで、どの項に入るかの情報を持たない。積算では条文を渡すだけで 61.3→100 まで動いたが、ここでは動かないと見ている。</li>
+    <li><strong>armC と armD の差は「その他のもの」への逃げで出る。</strong>検索できる腕は迷ったとき号の末尾に落とす。検査器はそれを名指しする。</li>
+    <li><strong>K001 と K002 に差は出ない。</strong>つまり暗記は効いていない。もし差が出れば、公開ベンチマークの数字が汚染されているという別の話になる。</li>
+  </ol>
+</section>
+
+<section>
+  <h2>結果 — K001（カットオフ後61件・n=1）</h2>
+  <p>合計点より<strong>深さで割った</strong>ほうが中身が出る。国際共通の6桁と、日本固有の統計細分3桁を分けて数える。</p>
+  <div class="scroll">
+  <table>
+    <tr><th>腕</th><th>類</th><th>項</th><th>号(6桁)</th><th>細分(9桁)</th><th>実在しない税番</th><th>合計</th></tr>
+    <tr><td>armA 記憶のみ</td><td class="num">51</td><td class="num">48</td><td class="num">48/61</td><td class="num">25/61</td><td class="num">25件</td><td class="num">78.0</td></tr>
+    <tr><td>armB 通則のみ</td><td class="num">48</td><td class="num">44</td><td class="num">43/61</td><td class="num">23/61</td><td class="num">29件</td><td class="num">73.2</td></tr>
+    <tr class="win"><td>armC 表＋実行</td><td class="num">49</td><td class="num">46</td><td class="num">46/61</td><td class="num">42/61</td><td class="num">0件</td><td class="num">85.5</td></tr>
+    <tr><td>armD ＋検査器</td><td class="num">48</td><td class="num">43</td><td class="num">43/61</td><td class="num">39/61</td><td class="num">0件</td><td class="num">83.3</td></tr>
+  </table>
+  </div>
+  <h3>関税率表が効いたのは分類の精度ではなく、コードの実在性だった</h3>
+  <p><em>6桁では4腕とも横並び（43〜48）。9桁だけが倍近く開く。</em>armA と armB は61件中25件・29件で<strong>存在しない税番を作っている</strong>。形は9桁で、申告した時点で弾かれるものである。armA の 78.0 は armC の 85.5 と 7.5点しか違わないが、<strong>armA の調書は4割が申告できない。</strong></p>
+
+  <h3>通則だけ渡すと、渡さないより悪くなった</h3>
+  <div class="scroll">
+  <table>
+    <tr><th>課題</th><th>条文なし</th><th>条文あり</th><th>差</th></tr>
+    <tr><td>sekisan S004 木躯体</td><td class="num">69.4</td><td class="num">100</td><td class="num">+30.6</td></tr>
+    <tr><td>sekisan S005 所要数量</td><td class="num">61.3</td><td class="num">100</td><td class="num">+38.7</td></tr>
+    <tr class="win"><td>kanzei K001 HS分類</td><td class="num">78.0</td><td class="num">73.2</td><td class="num">−4.8</td></tr>
+  </table>
+  </div>
+  <p>通則は分類の<strong>手続き</strong>を定める規定で、どの項に入るかの情報を持たない。<em>「知識を渡す」は単一の操作ではない。手続きの知識と内容の知識は別物で、前者だけ渡すと成績が下がる。</em></p>
+</section>
+
+<section>
+  <h2>K001b — 権威を5.4倍にしても、1件も動かなかった</h2>
+  <p>K001 を走らせて、<strong>渡していない権威が8割あった</strong>ことが判明した。税関の分類理由が引いている出典を数えると、関税率表解説47件・部注類注20件・通則10件・国内分類例規3件。<strong>49/61 が解説か例規で決まっていた。</strong>解説296万字と例規60万字を足し、検査器の欠陥3件を直して armC・armD を走らせ直した。</p>
+  <div class="scroll">
+  <table>
+    <tr><th>腕</th><th>資料</th><th>号(6桁)</th><th>細分(9桁)</th><th>合計</th></tr>
+    <tr><td>armC　K001</td><td class="num">81万字</td><td class="num">46/61</td><td class="num">42/61</td><td class="num">85.5</td></tr>
+    <tr><td>armC　K001b</td><td class="num">440万字</td><td class="num">43/61</td><td class="num">42/61</td><td class="num">83.8</td></tr>
+    <tr><td>armD　K001</td><td class="num">81万字</td><td class="num">43/61</td><td class="num">39/61</td><td class="num">83.3</td></tr>
+    <tr><td>armD　K001b</td><td class="num">440万字</td><td class="num">42/61</td><td class="num">39/61</td><td class="num">81.4</td></tr>
+  </table>
+  </div>
+  <div class="figrow">
+    <div class="figure"><span class="n">42 → 42</span><span class="cap">armC の9桁正解数<br>資料5.4倍で変化なし</span></div>
+    <div class="figure"><span class="n">39 → 39</span><span class="cap">armD の9桁正解数<br>検査器を直しても変化なし</span></div>
+  </div>
+
+  <h3>動いていないのではない。動いた数が釣り合っている</h3>
+  <p>答えが変わったのは armC 8件・armD 9件。どちらも<strong>直った4件・壊れた4件</strong>。壊れた側は、いずれも解説の該当条を<strong>正しく引用したうえで</strong>誤った結論に達している。</p>
+  <div class="specimen">
+    <span class="tag">正しい引用から誤った結論へ</span>
+    <span class="head">金属切削用旋盤の部分品 ×2</span>
+    <p>解説なし <code>8466.93-000</code>（正解）→ 解説あり <code>8458.11-000</code>。引いたのは第8458.11号の解説「コントロールユニットが加工機械とともに提示されない場合であっても…数値制御式加工機械とみなされる」。<strong>条文は実在し、引用も正確で、結論だけが税関と違う。</strong></p>
+    <p class="dim">armC は「解説が決め手になった」と10件を名指しして報告したが、答え合わせすると正解は4件だった。</p>
+  </div>
+
+  <h3>61件の内訳が、この業種の構造を示している</h3>
+  <div class="pair">
+    <div><span class="k">資料に関係なく解ける</span><span class="v">34 / 61（56%）</span><span class="d">4条件すべてで正解</span></div>
+    <div><span class="k">資料を増やしても解けない</span><span class="v">15 / 61（25%）</span><span class="d">4条件すべてで不正解</span></div>
+    <div><span class="k">資料が動かす範囲</span><span class="v">12 / 61（20%）</span><span class="d">動きは当たり外れが半々</span></div>
+  </div>
+  <p><em>権威を渡すことは、正答率を上げる操作ではなかった。</em>分類は「どの記述が最もよく当てはまるか」の判断である。権威の量が増えれば、どの候補にも、もっともらしい根拠が見つかるようになる。そのぶん自信は増すが、正しさは増えない。</p>
+
+  <h3>検査器は2回とも税番を1件も変えなかった</h3>
+  <p>audit の指摘は45件（K001）と36件（K001b）。<strong>税番の変更はどちらも0件</strong>、通則の記載変更が1件ずつ。欠陥を直しても同じで、armD は両回とも armC を下回っている（39対42）。</p>
+</section>
+
+<section>
+  <h2>K002 — 暗記の効果は検出されなかった</h2>
+  <p>K002（2024年処理）は公開から1年以上あり学習に入りうる。K001（2026年6–7月処理）はカットオフ後で入りようがない。<strong>暗記が効いているなら K002 が高く出るはず。</strong></p>
+  <div class="scroll">
+  <table>
+    <tr><th>腕</th><th>K001 9桁</th><th>K002 9桁</th><th>素の差</th><th>類を揃えた差</th></tr>
+    <tr class="win"><td>armA 記憶のみ</td><td class="num">25/61</td><td class="num">17/61</td><td class="num">+8</td><td class="num">−0.008</td></tr>
+    <tr class="win"><td>armB 通則のみ</td><td class="num">23/61</td><td class="num">15/61</td><td class="num">+8</td><td class="num">+0.005</td></tr>
+    <tr><td>armC 権威440万字</td><td class="num">42/61</td><td class="num">42/61</td><td class="num">0</td><td class="num">−0.096</td></tr>
+    <tr><td>armD ＋検査器</td><td class="num">39/61</td><td class="num">46/61</td><td class="num">−7</td><td class="num">−0.240</td></tr>
+  </table>
+  </div>
+  <p>素の差では armA・armB とも<strong>「カットオフ後のほうが8件高い」</strong>——暗記の逆向き。ただし品目の類が揃っていない（31類 対 21類、共通13類）ので、共通の類だけに絞ると <em>−0.008 と +0.005 でほぼ完全にゼロ</em>。素の +8 は類の構成で説明がつき、カットオフでは説明がつかない。</p>
+  <div class="specimen">
+    <span class="tag">4腕とも同じ自己申告</span>
+    <span class="head">「個別事案の再認は無い。論点の類型としての既視感だけ」</span>
+    <p>armA の言葉：「64類注4で甲・本底の材質を決める靴、61類注6の身長86cm超、詰物入りチョコレートを1806.31でなく1806.90に落とす論点——これらは頻出パターンとして知識化されているが、個別の回答番号や具体的な数値に対する記憶は無い」</p>
+  </div>
+  <h3>armC・armD は K002 のほうが良い。ただし原因は暗記ではない</h3>
+  <p>権威を持つ腕は K002 で当てている（−0.096／−0.240）。だが<strong>同じ事案を記憶だけで解く armA・armB に差が出ていない</strong>ので、暗記には帰せられない。armC と armD は独立に同じ説明をしている——<em>K002 の品目構成が、分類例規に文字どおりのチェックリストがある型に偏っていた。</em></p>
+  <p>履物6件は全て64類の例規で決まった。アフターブーツの4要件、ダンスシューズの3要件、平底靴の「溝が1mm以上ならすべり止め成型と認定して差し支えない」。<strong>貨物概要が例規の要件を一字一句なぞっている。</strong>効いたのはモデルの記憶ではなく、配布した資料の被覆率だった。</p>
+</section>
+
+<section>
+  <h2>armC は3条件すべてで 42/61</h2>
+  <div class="scroll">
+  <table>
+    <tr><th></th><th>課題</th><th>資料</th><th>9桁</th></tr>
+    <tr><td>K001</td><td>カットオフ後</td><td class="num">81万字</td><td class="num">42/61</td></tr>
+    <tr><td>K001b</td><td>カットオフ後</td><td class="num">440万字</td><td class="num">42/61</td></tr>
+    <tr><td>K002</td><td>カットオフ前</td><td class="num">440万字</td><td class="num">42/61</td></tr>
+  </table>
+  </div>
+  <p>課題を替え、資料を5.4倍にして、<strong>3回とも同じ点数</strong>。中身は違う（K002 では履物とチョコレートを例規で拾い、別のところで落としている）が、総数が動かない。</p>
+
+  <h3>検査器が初めて勝った——ただしこの比較は汚れている</h3>
+  <p>K002 で armD が初めて armC を上回った（<strong>46 対 42</strong>、「その他のもの」への逃げも 0 対 1）。armD の報告では、<code>audit</code> にかける<strong>前</strong>に <code>siblings</code> を先回りで回した段階で約10件の答えが変わっている。<code>audit</code> 自体の指摘48件では税番の変更は1件だけだった。</p>
+  <p><em>検査器は「提出前の一括検査」としては効かず、「候補を並べる道具」として効いた。</em>ただし armD の道具は3回とも中身が違う（K001 は部注の対応表が壊れ、K001b は path の親落ちが687品目、K002 は41品目）ので、39→46 の伸びを課題の違いだけに帰することはできない。</p>
+</section>
+
+<section>
+  <h2>n=5 — 42 は範囲の上端だった</h2>
+  <p>同一課題・同一条件で armC を5回。全課題 n=1 だったので、追試プロトコルの「平均ではなく最悪値で判定する」が一度も成立していなかった。</p>
+  <div class="figrow">
+    <div class="figure"><span class="n">39–42</span><span class="cap">5回の9桁正解数<br>41,42,39,41,42（SD 1.10）</span></div>
+    <div class="figure"><span class="n">42</span><span class="cap">K001/K001b/K002 で3回続いた数字<br><strong>範囲の上端だった</strong></span></div>
+  </div>
+  <p><em>armC 42 と armD 39 の差は、armC 自身のばらつきの中に完全に収まる。</em>「検査器を持つ腕のほうが悪い」という読みは n=1 の産物だった。</p>
+
+  <h3>それより重い——25%が毎回ちがう</h3>
+  <div class="pair">
+    <div><span class="k">一致して正解</span><span class="v">35 / 61（57%）</span><span class="d">何回走らせても取れる</span></div>
+    <div><span class="k">一致して不正解</span><span class="v">11 / 61（18%）</span><span class="d">何回走らせても取れない</span></div>
+    <div><span class="k">割れる</span><span class="v">15 / 61（25%）</span><span class="d">14件が2通り、1件が3通り</span></div>
+  </div>
+  <p>この分解は、先に4条件（armC/armD × 解説なし／あり）で出した「資料に関係なく解ける34／資料を増やしても解けない15／資料が動かす12」と<strong>ほぼ同じ数字</strong>になった。別々のやり方で切って同じ形が出ている。</p>
+
+  <h3>積算と正反対</h3>
+  <div class="scroll">
+  <table>
+    <tr><th>業種</th><th>条件</th><th>5回の答え</th></tr>
+    <tr><td>積算 S005</td><td class="dim">規則を渡さない</td><td class="num">4通り</td></tr>
+    <tr><td>積算 S005</td><td>規則を渡す</td><td class="num">1通り（1文字違わず同じ）</td></tr>
+    <tr class="win"><td>通関 K001</td><td>権威440万字を全部渡す</td><td class="num">25%が毎回ちがう</td></tr>
+  </table>
+  </div>
+  <div class="specimen">
+    <span class="tag">同じ条文を読んで別の読み方をする</span>
+    <span class="head">コオロギの粉 — 5回で3通り</span>
+    <p><code>0511.99-900</code>×3／<code>1602.90-269</code>×1／<code>0410.10-000</code>×1（正解は 0410.10-000）。ある回は第4類注6の加工の列挙に「煮沸」が無いことを根拠に第4部へ送り、別の回は「食用に適するか」を根拠に05.11へ送り、また別の回は0410.10に留めた。<strong>3回とも条文を引用しており、3回とも引用は正しい。</strong></p>
+  </div>
+  <p><em>規則を渡せば決定論的になる、は業種に依る。</em>積算の規則は答えを一意に決めるが、通関の規則は決めない。通関の権威は「どの記述が最もよく当てはまるか」の判断材料であって、判断そのものではない。だから材料をいくら増やしても、判断は揺れる。</p>
+
+  <div class="specimen">
+    <span class="tag">正直な記録：統制の不備</span>
+    <span class="head">この n=5 は、きれいな追試としては成立していない</span>
+    <p>5本の作業場を共有スクラッチパッドの下に並べたため、直下に前の回の腕が残した <code>build_answers.py</code>（K001の課題ID61件と9桁税番49種を持つ）があり、<strong>前回の解答が各 run から到達できる位置にあった</strong>。run2 は報告に「前の run の <code>t.py</code> があったので破棄した」と書いており、作業場の外を見に行ったことが確認できる。</p>
+    <p>丸写しは無い（前回 armC との一致率 87〜95%、100% の run は無い）。<strong>汚染は必ず「答えが揃う」向きに働くので、観測された25%の割れは下限である。</strong></p>
+  </div>
+</section>
+
+<section>
+  <h2>出題側の欠陥 通算15件 — うち8件が事実</h2>
+  <p>sekisan では3課題連続で腕が採点側の誤りを見つけた。通関では3回の実行で<strong>15件</strong>出た（下表は前半9件）。<strong>関税率表のパーサは4回直している。</strong>最後の1件はこちらの作業ミスで、tariff の平文テキストをパーサ修正前に生成したまま再生成しておらず、318税番が同じ号の中で区別できない状態のものを配っていた。<strong>ただし性質が違う。積算の3件は参照解の誤りだったが、今回は1件も参照解に触れていない</strong>——全て、腕に渡した資料と検査器の欠陥である。参照解を外部化した効果がここに出ている。</p>
+  <div class="scroll">
+  <table>
+    <tr><th>#</th><th>見つけた腕</th><th>中身</th><th>判定</th></tr>
+    <tr><td class="num">1</td><td class="dim">較正</td><td>登録番号が一意でない（1照会に4回答）</td><td>事実</td></tr>
+    <tr><td class="num">2</td><td class="dim">敵対テスト</td><td>空の提出が 17.4/100 を取る</td><td>事実</td></tr>
+    <tr><td class="num">3</td><td>armC・armD</td><td>関税率表の path が丸括弧番号の親を落とす（1,417品目）</td><td>事実</td></tr>
+    <tr><td class="num">4</td><td>armD</td><td>部注の対応表が21行中17行で存在しないファイルを指す</td><td>事実</td></tr>
+    <tr><td class="num">5</td><td>armD</td><td><code>explain</code> の兄弟が6桁前方一致</td><td>事実</td></tr>
+    <tr><td class="num">6</td><td>armD</td><td><code>audit</code> の通則3検査が「及び」に反応し半分以上空振り</td><td>事実</td></tr>
+    <tr><td class="num">7</td><td>armD</td><td>貨物概要が完全一致する2組は採点できない</td><td class="dim">誤り</td></tr>
+    <tr><td class="num">8</td><td>armC</td><td>A/B・(a)(b)・〔1〕を扱わず親が落ちる。ダッシュは相対深さ</td><td>事実</td></tr>
+    <tr><td class="num">9</td><td>armD</td><td><code>kaisetu</code> のゼロ詰め漏れで第1〜9類の例規が永久に引けない</td><td>事実</td></tr>
+    <tr class="win"><td class="num">10</td><td>armD・armC</td><td><strong>平文テキストをパーサ修正前に生成したまま再生成せず配布。318税番が同じ号の中で区別不能</strong></td><td>事実</td></tr>
+    <tr><td class="num">11</td><td>armD</td><td>(ｲ)(ﾛ) 半角カナ括弧・I/II を階層マーカーに入れておらず親が落ちる</td><td>事実</td></tr>
+    <tr><td class="num">12</td><td>armD</td><td><code>OTHER</code> が「その他の」の部分一致で特掲細分に誤爆</td><td>事実</td></tr>
+    <tr><td class="num">13</td><td>armD</td><td><code>kaisetu</code> が類のファイルを持たないとき黙る（<code>notes</code> は警告する）</td><td>事実</td></tr>
+    <tr><td class="num">14</td><td>armD</td><td><code>notes 98</code> が「第None部」と表示する</td><td>事実</td></tr>
+    <tr><td class="num">15</td><td>armC</td><td>PDF抽出で図版が全て落ち、図が本体だった例規2本が判読不能</td><td>事実</td></tr>
+  </table>
+  </div>
+  <p>10番はこちらの作業ミスで、生成物を JSON と平文の2つ持ちながら片方だけ手で作って放置していた。armC は自己申告で「兄弟の並び順は平文を grep した」と書いており直撃している。4番・9番・13番は同じ壊れ方で、<em>「無いのか、引けていないのかが分からない」</em>。sekisan S006 の「手で並べた一覧は、増えると必ず腐る」を、別のリポジトリで2回繰り返した。</p>
+</section>
+
+<section>
+  <h2>予想の答え合わせ</h2>
+  <ol class="pred">
+    <li><strong>当たり。</strong>armA は9桁41%・6桁79%。細分は記憶で当たらないが、国際共通のHSはそれなりに当てる</li>
+    <li><strong>当たり。しかも下回った。</strong>通則だけ渡すと 78.0→73.2</li>
+    <li><strong>外れ。</strong>「その他のもの」への逃げは armC 3件・armD 4件で armD のほうが多く、検査器は税番を1件も変えなかった</li>
+    <li><strong>当たり（記憶だけの腕では）。</strong>armA −0.008・armB +0.005 でほぼ完全にゼロ。権威を持つ腕には差が出たが、原因は暗記ではなく分類例規の被覆率だった</li>
+  </ol>
+</section>
+
+<section>
+  <h2>現在地</h2>
+  <div class="status">
+    <div><span class="mark">[x]</span><span>参照解の収穫　2026年6–7月 <strong>241件</strong>／2024年6–7月 <strong>672件</strong></span></div>
+    <div><span class="mark">[x]</span><span>権威の機械可読化　関税率表9,654品目＋通則部注類注＋解説＋例規＝<strong>4,367,866字</strong></span></div>
+    <div><span class="mark">[x]</span><span>採点器・較正（100/100）・敵対テスト（8ケース）・検査器</span></div>
+    <div><span class="mark">[x]</span><span><strong>K001　4腕</strong>（記憶のみ／通則のみ／表＋実行／＋検査器）</span></div>
+    <div><span class="mark">[x]</span><span><strong>K001b　2腕</strong>（権威の全量＋修正済み検査器）</span></div>
+    <div><span class="mark">[x]</span><span><strong>K002　4腕</strong>　カットオフ前61件。<strong>暗記の効果は検出されず</strong></span></div>
+    <div><span class="mark">[x]</span><span><strong>n=5 の追試</strong>　39–42 の幅。<strong>25%の事案が毎回ちがう</strong></span></div>
+  </div>
+</section>
+
+<footer>
+  出典：税関 事前教示回答（品目分類）／実行関税率表 2026年8月1日版／関税率表の解釈に関する通則<br>
+  関連：cad-bench・sekisan-bench・doboku-bench　＝　AI実務到達度インデックス 1〜3本目
+</footer>
+
+</div>

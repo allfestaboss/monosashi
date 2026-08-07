@@ -1,0 +1,160 @@
+<title>物差し</title>
+<style>
+  :root{
+    --ground:#E6E3D6; --ground2:#DEDACB; --ink:#17160F; --ink-soft:#4A4739;
+    --rule:#C3BDA8; --verdigris:#3F5D4E; --ochre:#8F6B1F; --oxide:#8C3A26;
+    --indigo:#33445F; --chip:#D5D0BC;
+    --mincho:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;
+    --gothic:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+    --mono:ui-monospace,"SFMono-Regular",Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--ground:#14140F; --ground2:#1D1C16; --ink:#DDD9C9; --ink-soft:#9E9A88;
+      --rule:#3A382E; --verdigris:#7FA48E; --ochre:#C9A24F; --oxide:#C4705A;
+      --indigo:#8FA3C0; --chip:#26251D;}
+  }
+  :root[data-theme="dark"]{--ground:#14140F; --ground2:#1D1C16; --ink:#DDD9C9; --ink-soft:#9E9A88;
+    --rule:#3A382E; --verdigris:#7FA48E; --ochre:#C9A24F; --oxide:#C4705A;
+    --indigo:#8FA3C0; --chip:#26251D;}
+  :root[data-theme="light"]{--ground:#E6E3D6; --ground2:#DEDACB; --ink:#17160F; --ink-soft:#4A4739;
+    --rule:#C3BDA8; --verdigris:#3F5D4E; --ochre:#8F6B1F; --oxide:#8C3A26;
+    --indigo:#33445F; --chip:#D5D0BC;}
+
+  body{background:var(--ground);color:var(--ink);font-family:var(--gothic);
+       line-height:1.85;font-size:16px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:47rem;margin:0 auto;padding:4rem 1.5rem 6rem;
+        display:flex;flex-direction:column;gap:2.75rem;}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;
+           text-transform:uppercase;color:var(--verdigris);}
+  h1{font-family:var(--mincho);font-size:clamp(1.9rem,5vw,2.7rem);line-height:1.35;
+     font-weight:600;margin:.5rem 0 0;text-wrap:balance;letter-spacing:.01em;}
+  .sub{font-family:var(--mincho);font-size:1.05rem;color:var(--ink-soft);margin-top:.9rem;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:1.6rem;}
+  .meta{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;margin-top:1.4rem;
+        font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);}
+  section{display:flex;flex-direction:column;gap:1rem;}
+  h2{font-family:var(--mincho);font-size:1.3rem;font-weight:600;margin:0;
+     padding-bottom:.5rem;border-bottom:1px solid var(--rule);text-wrap:balance;}
+  h3{font-family:var(--gothic);font-size:.95rem;font-weight:700;margin:.6rem 0 -.3rem;
+     color:var(--verdigris);letter-spacing:.02em;}
+  p{margin:0;}
+  em{font-style:normal;background:linear-gradient(transparent 62%,var(--chip) 62%);font-weight:700;}
+  .scroll{overflow-x:auto;}
+  table{border-collapse:collapse;width:100%;font-size:.87rem;font-variant-numeric:tabular-nums;}
+  th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top;}
+  th{font-family:var(--mono);font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;
+     color:var(--ink-soft);font-weight:400;border-bottom:1px solid var(--ink);white-space:nowrap;}
+  td.num{font-family:var(--mono);white-space:nowrap;}
+  tr.win td{background:var(--ground2);}
+  tr.win td:first-child{box-shadow:inset 3px 0 0 var(--verdigris);font-weight:700;}
+  .dim{color:var(--ink-soft);}
+  .specimen{border:1px solid var(--rule);background:var(--ground2);
+            padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.55rem;}
+  .specimen .tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;
+                 text-transform:uppercase;color:var(--oxide);}
+  .specimen .head{font-family:var(--mincho);font-size:1.05rem;font-weight:600;}
+  .specimen p{font-size:.9rem;line-height:1.75;}
+  .figure{display:flex;flex-direction:column;gap:.3rem;border-left:3px solid var(--ochre);
+          padding:.2rem 0 .2rem 1rem;}
+  .figure .n{font-family:var(--mono);font-size:1.6rem;font-weight:600;
+             letter-spacing:-.01em;font-variant-numeric:tabular-nums;}
+  .figure .cap{font-size:.85rem;color:var(--ink-soft);line-height:1.6;}
+  .figrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:1.4rem;}
+  .pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:1px;
+        background:var(--rule);border:1px solid var(--rule);}
+  .pair > div{background:var(--ground);padding:1rem 1.1rem;
+              display:flex;flex-direction:column;gap:.35rem;}
+  .pair .k{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;color:var(--indigo);}
+  .pair .v{font-family:var(--mincho);font-size:1.02rem;font-weight:600;}
+  .pair .d{font-size:.84rem;color:var(--ink-soft);line-height:1.65;}
+  ol,ul{margin:0;padding-left:1.3rem;display:flex;flex-direction:column;gap:.5rem;}
+  ol.pred{list-style:none;padding-left:0;counter-reset:p;}
+  ol.pred li{counter-increment:p;padding-left:2.1rem;position:relative;}
+  ol.pred li::before{content:"予" counter(p);position:absolute;left:0;top:.1rem;
+    font-family:var(--mono);font-size:.68rem;color:var(--ochre);
+    border:1px solid var(--ochre);padding:.05rem .3rem;line-height:1.4;}
+  code{font-family:var(--mono);font-size:.85em;background:var(--chip);padding:.1em .35em;border-radius:2px;}
+  .status{display:flex;flex-direction:column;gap:.35rem;font-size:.9rem;}
+  .status div{display:flex;gap:.6rem;align-items:baseline;}
+  .status .mark{font-family:var(--mono);font-size:.8rem;color:var(--verdigris);}
+  .status .todo .mark{color:var(--oxide);}
+  footer{border-top:1px solid var(--rule);padding-top:1.2rem;
+         font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);line-height:1.8;}
+</style>
+<div class="wrap">
+<header>
+  <div class="eyebrow">AI実務到達度インデックス</div>
+  <h1>AIは専門職の仕事を<br>どこまでやれるか</h1>
+  <p class="sub">職種ごとに、<strong>同じ物差し</strong>で実測して公開する。<br>
+  推計ではなく実測。うまくいかなかった回も、こちらの間違いも、そのまま載せる。</p>
+  <div class="meta"><span>2026-08 開始</span><span>実測 5業種</span><span>公開 2業種</span></div>
+</header>
+
+<section>
+  <h2>なぜやるか</h2>
+  <p>日本で「AIは専門職をどこまで代替するか」を語るとき、いまだに引かれているのは
+  <strong>2015年の野村総研×オックスフォードの推計</strong>である。行政書士93.1%、税理士92.5%、弁理士92.1%。
+  だがあれは<em>職業属性からの回帰推計であって、誰も一度も実務をやらせて測っていない。</em>
+  LLM以前の数字が、11年後の今も既定値として流通している。</p>
+  <p>ここでやるのは1つだけ。<strong>成文化された基準を持つ専門職の実務を、実際にAIにやらせて、権威が確定させた正解と突き合わせる。</strong></p>
+</section>
+
+<section>
+  <h2>いま出ている、いちばん重い結果</h2>
+  <div class="specimen">
+    <span class="tag">2業種・5通りの増やし方で再現</span>
+    <span class="head">資料を増やしても、正答率は上がらない</span>
+    <div class="scroll">
+    <table>
+      <tr><th>業種</th><th>資料の増やし方</th><th>結果</th></tr>
+      <tr><td>通関 HS分類</td><td>81万字 → 440万字（5.4倍）</td><td class="num">42→42（<strong>0件</strong>）</td></tr>
+      <tr><td>税務 根拠条文</td><td>ゼロ → RAG候補30万字</td><td class="num">72.3 → 74.0</td></tr>
+      <tr><td>税務 根拠条文</td><td>RAG → 全文2,400万字（80倍）</td><td class="num">74.0 → 73.1</td></tr>
+      <tr><td>税務 根拠条文</td><td>資料の欠陥を修正（被覆79→83%）</td><td class="num">73.1 → <strong>72.0</strong></td></tr>
+    </table>
+    </div>
+    <p>そして両業種とも、<strong>同一条件で繰り返すと答えが安定しない</strong>。
+    通関で25%、税務では<strong>74%</strong>の事案が、毎回ちがう答えになった。
+    税務では点数のほうは 124本±1 でほぼ不動——<em>毎回ほぼ同じ点数を、毎回ちがう答えで取っている。</em></p>
+  </div>
+  <p>「精度が足りない」より先に来る話がある。<strong>同じ問いに同じ答えが返らない。</strong>
+  税務・監査・通関のように再現性そのものが要件になる場面では、精度以前の問題になる。</p>
+</section>
+
+<section>
+  <h2>測った業種</h2>
+  <div class="pair">
+    <div><span class="k">公開済み</span><span class="v"><a href="/kanzei/" style="color:inherit">通関 HS分類</a></span>
+      <span class="d">貨物の説明から輸入統計品目番号9桁を決める。参照解は税関の事前教示回答。
+      権威を5.4倍にして正答数が1件も動かなかった</span></div>
+    <div><span class="k">公開済み</span><span class="v"><a href="/zeimu/" style="color:inherit">税務 根拠条文</a></span>
+      <span class="d">税務の照会に対し、国税庁が根拠とした条文を当てる。RAGは出典を示すことで
+      売られているが、その出典が正しいかを誰も測っていない</span></div>
+    <div><span class="k">準備中</span><span class="v">建築2D図面（DXF）</span>
+      <span class="d">検査器の有無で到達度が動くことが最初に出た回</span></div>
+    <div><span class="k">準備中</span><span class="v">積算・土木CAD</span>
+      <span class="d">条文を渡す価値は、その知識の有名度に反比例する</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>作法</h2>
+  <ul>
+    <li><strong>参照解は自分で書かない。</strong>権威が確定させた正解が公開されている業種だけを選ぶ
+      （税関の事前教示回答、国税庁の質疑応答事例）。自作した参照解は検査できない</li>
+    <li><strong>採点する前に、採点器を採点する。</strong>参照解が満点を取るか（較正）と、
+      実務では使えない提出が点を取らないか（敵対テスト）を通してから数字を出す</li>
+    <li><strong>予想を先に書いて commit する。</strong>外れてもそのまま残す。5業種で立てた予想のうち、
+      当たったより外れたほうが学びが大きかった</li>
+    <li><strong>n=1 で順位を語らない。</strong>同一条件を5回回して揺れ幅を測ってから比べる</li>
+    <li><strong>こちらの誤りも載せる。</strong>被験者（AI）が出題側の欠陥を指摘した回数は、
+      2業種で通算44件。全部記録してある</li>
+  </ul>
+  <p><a href="/method/">測り方の詳細 →</a></p>
+</section>
+
+<footer>
+  出典：税関ホームページ／国税庁ホームページ／e-Gov法令検索<br>
+  データは各ホームページの情報を加工して作成。利用条件は各ページに記載。
+</footer>
+</div>

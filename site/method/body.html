@@ -1,0 +1,210 @@
+<title>測り方</title>
+<style>
+  :root{
+    --ground:#E6E3D6; --ground2:#DEDACB; --ink:#17160F; --ink-soft:#4A4739;
+    --rule:#C3BDA8; --verdigris:#3F5D4E; --ochre:#8F6B1F; --oxide:#8C3A26;
+    --indigo:#33445F; --chip:#D5D0BC;
+    --mincho:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;
+    --gothic:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+    --mono:ui-monospace,"SFMono-Regular",Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--ground:#14140F; --ground2:#1D1C16; --ink:#DDD9C9; --ink-soft:#9E9A88;
+      --rule:#3A382E; --verdigris:#7FA48E; --ochre:#C9A24F; --oxide:#C4705A;
+      --indigo:#8FA3C0; --chip:#26251D;}
+  }
+  :root[data-theme="dark"]{--ground:#14140F; --ground2:#1D1C16; --ink:#DDD9C9; --ink-soft:#9E9A88;
+    --rule:#3A382E; --verdigris:#7FA48E; --ochre:#C9A24F; --oxide:#C4705A;
+    --indigo:#8FA3C0; --chip:#26251D;}
+  :root[data-theme="light"]{--ground:#E6E3D6; --ground2:#DEDACB; --ink:#17160F; --ink-soft:#4A4739;
+    --rule:#C3BDA8; --verdigris:#3F5D4E; --ochre:#8F6B1F; --oxide:#8C3A26;
+    --indigo:#33445F; --chip:#D5D0BC;}
+
+  body{background:var(--ground);color:var(--ink);font-family:var(--gothic);
+       line-height:1.85;font-size:16px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:47rem;margin:0 auto;padding:4rem 1.5rem 6rem;
+        display:flex;flex-direction:column;gap:2.75rem;}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;
+           text-transform:uppercase;color:var(--verdigris);}
+  h1{font-family:var(--mincho);font-size:clamp(1.9rem,5vw,2.7rem);line-height:1.35;
+     font-weight:600;margin:.5rem 0 0;text-wrap:balance;letter-spacing:.01em;}
+  .sub{font-family:var(--mincho);font-size:1.05rem;color:var(--ink-soft);margin-top:.9rem;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:1.6rem;}
+  .meta{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;margin-top:1.4rem;
+        font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);}
+  section{display:flex;flex-direction:column;gap:1rem;}
+  h2{font-family:var(--mincho);font-size:1.3rem;font-weight:600;margin:0;
+     padding-bottom:.5rem;border-bottom:1px solid var(--rule);text-wrap:balance;}
+  h3{font-family:var(--gothic);font-size:.95rem;font-weight:700;margin:.6rem 0 -.3rem;
+     color:var(--verdigris);letter-spacing:.02em;}
+  p{margin:0;}
+  em{font-style:normal;background:linear-gradient(transparent 62%,var(--chip) 62%);font-weight:700;}
+  .scroll{overflow-x:auto;}
+  table{border-collapse:collapse;width:100%;font-size:.87rem;font-variant-numeric:tabular-nums;}
+  th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top;}
+  th{font-family:var(--mono);font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;
+     color:var(--ink-soft);font-weight:400;border-bottom:1px solid var(--ink);white-space:nowrap;}
+  td.num{font-family:var(--mono);white-space:nowrap;}
+  tr.win td{background:var(--ground2);}
+  tr.win td:first-child{box-shadow:inset 3px 0 0 var(--verdigris);font-weight:700;}
+  .dim{color:var(--ink-soft);}
+  .specimen{border:1px solid var(--rule);background:var(--ground2);
+            padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.55rem;}
+  .specimen .tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;
+                 text-transform:uppercase;color:var(--oxide);}
+  .specimen .head{font-family:var(--mincho);font-size:1.05rem;font-weight:600;}
+  .specimen p{font-size:.9rem;line-height:1.75;}
+  .figure{display:flex;flex-direction:column;gap:.3rem;border-left:3px solid var(--ochre);
+          padding:.2rem 0 .2rem 1rem;}
+  .figure .n{font-family:var(--mono);font-size:1.6rem;font-weight:600;
+             letter-spacing:-.01em;font-variant-numeric:tabular-nums;}
+  .figure .cap{font-size:.85rem;color:var(--ink-soft);line-height:1.6;}
+  .figrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:1.4rem;}
+  .pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:1px;
+        background:var(--rule);border:1px solid var(--rule);}
+  .pair > div{background:var(--ground);padding:1rem 1.1rem;
+              display:flex;flex-direction:column;gap:.35rem;}
+  .pair .k{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;color:var(--indigo);}
+  .pair .v{font-family:var(--mincho);font-size:1.02rem;font-weight:600;}
+  .pair .d{font-size:.84rem;color:var(--ink-soft);line-height:1.65;}
+  ol,ul{margin:0;padding-left:1.3rem;display:flex;flex-direction:column;gap:.5rem;}
+  ol.pred{list-style:none;padding-left:0;counter-reset:p;}
+  ol.pred li{counter-increment:p;padding-left:2.1rem;position:relative;}
+  ol.pred li::before{content:"予" counter(p);position:absolute;left:0;top:.1rem;
+    font-family:var(--mono);font-size:.68rem;color:var(--ochre);
+    border:1px solid var(--ochre);padding:.05rem .3rem;line-height:1.4;}
+  code{font-family:var(--mono);font-size:.85em;background:var(--chip);padding:.1em .35em;border-radius:2px;}
+  .status{display:flex;flex-direction:column;gap:.35rem;font-size:.9rem;}
+  .status div{display:flex;gap:.6rem;align-items:baseline;}
+  .status .mark{font-family:var(--mono);font-size:.8rem;color:var(--verdigris);}
+  .status .todo .mark{color:var(--oxide);}
+  footer{border-top:1px solid var(--rule);padding-top:1.2rem;
+         font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);line-height:1.8;}
+</style>
+<div class="wrap">
+<header>
+  <div class="eyebrow">物差し／作法</div>
+  <h1>測り方</h1>
+  <p class="sub">同じ物差しで比べられるように、業種が変わっても手順は変えない。<br>
+  変えたところは、変えた理由ごと書く。</p>
+</header>
+
+<section>
+  <h2>1. 業種の選び方 — 参照解が外部にあるか</h2>
+  <p>第一条件は「公的基準があるか」ではなく、<em>権威が確定させた正解の集合が公開されているか</em>。
+  基準だけあっても、正解を自分で導く工程が残るなら同じ穴に落ちる。</p>
+  <div class="specimen">
+    <span class="tag">この規則ができた経緯</span>
+    <span class="head">自作した参照解は、検査できない</span>
+    <p>最初の3業種（建築図面・積算・土木CAD）は参照解を自作した。その結果、積算では
+    <strong>3課題連続で、採点される側が採点する側の誤りを見つけた</strong>——参照解の丸め、
+    仕様と図面の食い違い、検査器が構造的に常にNGを出す件。</p>
+    <p>較正（参照解が満点を取るか）も敵対テスト（採点器が騙されないか）も、
+    <strong>どちらも参照解を真とする前提の上に立っている</strong>ので、参照解自体が間違っていると素通りする。
+    気づけたのは毎回「独立した複数の腕が揃って参照解と違う値を出したから」で、仕組みではなかった。</p>
+  </div>
+</section>
+
+<section>
+  <h2>2. 腕を4つに分ける</h2>
+  <div class="scroll">
+  <table>
+    <tr><th>腕</th><th>記憶</th><th>基準の文</th><th>全資料</th><th>コード実行</th><th>検査器</th></tr>
+    <tr><td>armA</td><td class="num">○</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td></tr>
+    <tr><td>armB</td><td class="num">○</td><td class="num">○</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td></tr>
+    <tr><td>armC</td><td class="num">○</td><td class="num">○</td><td class="num">○</td><td class="num">○</td><td class="dim">—</td></tr>
+    <tr><td>armD</td><td class="num">○</td><td class="num">○</td><td class="num">○</td><td class="num">○</td><td class="num">○</td></tr>
+  </table>
+  </div>
+  <p>最初は3腕（条文なし／条文あり／条文＋検査器）で切っていたが、
+  <strong>これは「知識」と「実行」を1本に束ねていた</strong>。束ねると軸を取り違える。</p>
+</section>
+
+<section>
+  <h2>3. 採点する前に、採点器を採点する</h2>
+  <p>数字を出す前に必ず2つの門を通す。どちらかが落ちたら止める。</p>
+  <ul>
+    <li><strong>較正</strong> — 権威の回答をそのまま提出形式にして採点する。満点でなければ採点器が壊れている</li>
+    <li><strong>敵対テスト</strong> — 「実務では使えないのに点が入りそうな提出」を8〜10通り投げる</li>
+  </ul>
+  <div class="specimen">
+    <span class="tag">敵対テストで実際に見つかった穴</span>
+    <span class="head">空の提出が 17.4/100 を取った</span>
+    <p>通関では通則3が要る事案が13%しかないため、<strong>全件「不要」と黙っているだけで87%取れて</strong>いた。
+    回答が無いことが「通則3を引いていない」と読まれていた。
+    不作為を無得点にし、2クラスの再現率の平均に変えて 0.0 になった。</p>
+    <p class="dim">積算では「単位を換算しないまま提出した調書」が 57.7/100 を取る穴があり、
+    こちらは<strong>敵対テストを書くまで気づかなかった</strong>。</p>
+  </div>
+  <p>較正も実際に落ちる。通関では初回 98.04/100 で、原因は<strong>登録番号が一意でなかった</strong>こと
+  （1件の照会に税関が4つの税番を返していた）。門が無ければ61件の課題が58件で走っていた。</p>
+</section>
+
+<section>
+  <h2>4. 深さで傾斜をつける</h2>
+  <p>合っている／間違っている の二値にすると、「類は合っているが細分を外した」と
+  「そもそも別の類」が同じ0点になる。階層のある答えは階層で採る。</p>
+  <div class="scroll">
+  <table>
+    <tr><th>業種</th><th>深さ</th><th>実測（記憶のみの腕）</th></tr>
+    <tr><td>通関</td><td>類 → 項 → 号 → 統計細分</td><td class="num">84% → 79% → 79% → 41%</td></tr>
+    <tr><td>税務</td><td>法令名 → 条 → 項 → 号</td><td class="num">78% → 56% → 41% → 35%</td></tr>
+  </table>
+  </div>
+  <p>どちらも<strong>階段状に落ちる</strong>。合計点だけ見ていると、この形は見えない。</p>
+</section>
+
+<section>
+  <h2>5. n=1 で順位を語らない</h2>
+  <p>通関で、ある腕が3回続けて 42/61 を出した。安定に見えた。
+  同一条件で5回回すと <strong>39〜42（幅3・SD1.10）</strong>で、
+  <em>42は範囲の上端を3回引いていただけ</em>だった。他の腕との3点差は、この揺れの中に完全に収まる。</p>
+  <p>得点より重いのは<strong>答えの割れ方</strong>である。得点が安定していても、
+  中身が毎回ちがえば「同じ点数を別の間違い方で取っている」という意味でしかない。</p>
+  <div class="scroll">
+  <table>
+    <tr><th>業種</th><th>得点の幅</th><th>答えが全回一致した事案</th></tr>
+    <tr><td>通関</td><td class="num">39–42</td><td class="num">75%</td></tr>
+    <tr class="win"><td>税務</td><td class="num">72.8–75.0</td><td class="num">26%</td></tr>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>6. 隔離 — 壊してから書いた規則</h2>
+  <p>通関の追試で、5本の作業場を共有領域の下に並べたため、
+  <strong>前の回の解答が各runから到達できる位置にあった</strong>。丸写しは無かったが、
+  きれいな追試としては成立しなくなった。以後こうしている。</p>
+  <ul>
+    <li>腕の作業場は共有領域の外に置き、腕どうしを兄弟ディレクトリにしない</li>
+    <li>過去の成果物は、走らせる前に到達できない場所へ退避する</li>
+    <li><strong>走らせる前に「親から見えるファイル」を列挙して記録に残す</strong></li>
+    <li>サブエージェントの許否を明記する（書き忘れて、腕が勝手に4〜6本立てた回がある）</li>
+    <li>共有領域に道具を書かせない（作業場を分けても、腕は自分の判断で共有領域を使う）</li>
+  </ul>
+  <p class="dim">読み方は決まる。<strong>汚染は必ず「答えが揃う」向きに働く</strong>ので、
+  それでも観測されたばらつきは下限になる。</p>
+</section>
+
+<section>
+  <h2>7. こちらの誤りを載せる</h2>
+  <p>被験者（AI）が出題側の欠陥を指摘した回数は、2業種で<strong>通算44件</strong>。うち事実だったものは大半。
+  記録して公開している理由は2つある。ひとつは、指摘されなければ気づかないまま数字を出していたから。
+  もうひとつは、<strong>壊れ方に型があった</strong>から。</p>
+  <div class="specimen">
+    <span class="tag">44件に共通する型</span>
+    <span class="head">実物を見ずに構造を仮定し、例外を投げずに「正常終了」する</span>
+    <p>索引が1段だと決めつける（0節で正常終了）。ファイル名が数字だと決めつける。
+    URLが <code>.htm</code> で終わると決めつける（アンカー付きで全滅）。
+    表のセルを項番として登録する（本物の項を覆い隠す）。
+    <strong>いずれも、実物のリンクを数えた瞬間に原因が分かった。推測で直そうとした回はすべて外している。</strong></p>
+  </div>
+  <p>そして<strong>被験者の指摘は氷山の一角を指す</strong>。「補塡の塡が欠落」という1文字の報告を追うと、
+  丸数字の項番と算式が画像で全部落ちていた。別々の症状に見えた2つの報告が、
+  同じ原因（番号のタグ分断による上書き）だったこともある。</p>
+</section>
+
+<footer>
+  <a href="/">← 物差し</a>　｜　<a href="/kanzei/">通関</a>　<a href="/zeimu/">税務</a>
+</footer>
+</div>
