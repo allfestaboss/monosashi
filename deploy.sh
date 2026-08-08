@@ -15,10 +15,13 @@ ssh $HOST "docker ps --format '{{.Names}}' | grep -q '^${NAME}$' && echo '  既�
 
 echo "== 転送してビルド =="
 ssh $HOST "mkdir -p /root/apps/monosashi"
-rsync -az --delete dist/ Dockerfile nginx.conf $HOST:/root/apps/monosashi/
+# dist/ は**ディレクトリごと**送る。末尾スラッシュだと中身が平たく展開され、
+# Dockerfile の COPY dist/ が「/dist が無い」で落ちる（実際に落ちた）。
+rsync -az --delete dist/ $HOST:/root/apps/monosashi/dist/
+rsync -az Dockerfile nginx.conf $HOST:/root/apps/monosashi/
 ssh $HOST "cd /root/apps/monosashi && docker build -q -t ${NAME}:latest . && \
   docker rm -f ${NAME} 2>/dev/null; \
-  docker run -d --name ${NAME} --restart unless-stopped --network npm_default ${NAME}:latest"
+  docker run -d --name ${NAME} --restart unless-stopped --network npm_network ${NAME}:latest"
 
 echo "== 疎通 =="
 ssh $HOST "docker exec ${NAME} wget -qO- -S http://127.0.0.1/ 2>&1 | head -1"
