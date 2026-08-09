@@ -20,6 +20,7 @@ SITE = ROOT / "site"
 DIST = ROOT / "dist"
 
 PAGES = [
+    ("cad", "建築2D図面 DXF", "間取りを完全に与えて作図能力だけを測る", "2026-08"),
     ("kanzei", "通関 HS分類", "貨物の説明から輸入統計品目番号を決める", "2026-08"),
     ("zeimu", "税務 根拠条文", "税務の照会に対して国税庁が根拠とした条文を当てる", "2026-08"),
 ]
@@ -27,7 +28,7 @@ PAGES = [
 NAV = """<nav class="site-nav">
   <a class="brand" href="/">物差し</a>
   <span class="navlinks">
-    <a href="/kanzei/">通関</a><a href="/zeimu/">税務</a><a href="/method/">測り方</a>
+    <a href="/cad/">建築CAD</a><a href="/kanzei/">通関</a><a href="/zeimu/">税務</a><a href="/method/">測り方</a>
   </span>
 </nav>"""
 

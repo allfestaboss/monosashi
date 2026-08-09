@@ -1,0 +1,327 @@
+<title>cad-bench 建築2D図面 — T001〜T005 結果</title>
+<style>
+  :root{
+    --ground:#E6E3D6; --ground2:#DEDACB; --ink:#17160F; --ink-soft:#4A4739;
+    --rule:#C3BDA8; --verdigris:#3F5D4E; --ochre:#8F6B1F; --oxide:#8C3A26;
+    --indigo:#33445F; --chip:#D5D0BC;
+    --mincho:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;
+    --gothic:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+    --mono:ui-monospace,"SFMono-Regular",Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--ground:#14140F; --ground2:#1D1C16; --ink:#DDD9C9; --ink-soft:#9E9A88;
+      --rule:#3A382E; --verdigris:#7FA48E; --ochre:#C9A24F; --oxide:#C4705A;
+      --indigo:#8FA3C0; --chip:#26251D;}
+  }
+  :root[data-theme="dark"]{--ground:#14140F; --ground2:#1D1C16; --ink:#DDD9C9; --ink-soft:#9E9A88;
+    --rule:#3A382E; --verdigris:#7FA48E; --ochre:#C9A24F; --oxide:#C4705A;
+    --indigo:#8FA3C0; --chip:#26251D;}
+  :root[data-theme="light"]{--ground:#E6E3D6; --ground2:#DEDACB; --ink:#17160F; --ink-soft:#4A4739;
+    --rule:#C3BDA8; --verdigris:#3F5D4E; --ochre:#8F6B1F; --oxide:#8C3A26;
+    --indigo:#33445F; --chip:#D5D0BC;}
+
+  body{background:var(--ground);color:var(--ink);font-family:var(--gothic);
+       line-height:1.85;font-size:16px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:47rem;margin:0 auto;padding:4rem 1.5rem 6rem;
+        display:flex;flex-direction:column;gap:2.75rem;}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;
+           text-transform:uppercase;color:var(--verdigris);}
+  h1{font-family:var(--mincho);font-size:clamp(1.9rem,5vw,2.7rem);line-height:1.35;
+     font-weight:600;margin:.5rem 0 0;text-wrap:balance;letter-spacing:.01em;}
+  .sub{font-family:var(--mincho);font-size:1.05rem;color:var(--ink-soft);margin-top:.9rem;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:1.6rem;}
+  .meta{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;margin-top:1.4rem;
+        font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);}
+  section{display:flex;flex-direction:column;gap:1rem;}
+  h2{font-family:var(--mincho);font-size:1.3rem;font-weight:600;margin:0;
+     padding-bottom:.5rem;border-bottom:1px solid var(--rule);text-wrap:balance;}
+  h3{font-family:var(--gothic);font-size:.95rem;font-weight:700;margin:.6rem 0 -.3rem;
+     color:var(--verdigris);letter-spacing:.02em;}
+  p{margin:0;}
+  em{font-style:normal;background:linear-gradient(transparent 62%,var(--chip) 62%);font-weight:700;}
+  .scroll{overflow-x:auto;}
+  table{border-collapse:collapse;width:100%;font-size:.87rem;font-variant-numeric:tabular-nums;}
+  th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top;}
+  th{font-family:var(--mono);font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;
+     color:var(--ink-soft);font-weight:400;border-bottom:1px solid var(--ink);white-space:nowrap;}
+  td.num{font-family:var(--mono);white-space:nowrap;}
+  tr.win td{background:var(--ground2);}
+  tr.win td:first-child{box-shadow:inset 3px 0 0 var(--verdigris);font-weight:700;}
+  .dim{color:var(--ink-soft);}
+  .specimen{border:1px solid var(--rule);background:var(--ground2);
+            padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.55rem;}
+  .specimen .tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;
+                 text-transform:uppercase;color:var(--oxide);}
+  .specimen .head{font-family:var(--mincho);font-size:1.05rem;font-weight:600;}
+  .specimen p{font-size:.9rem;line-height:1.75;}
+  .figure{display:flex;flex-direction:column;gap:.3rem;border-left:3px solid var(--ochre);
+          padding:.2rem 0 .2rem 1rem;}
+  .figure .n{font-family:var(--mono);font-size:1.6rem;font-weight:600;
+             letter-spacing:-.01em;font-variant-numeric:tabular-nums;}
+  .figure .cap{font-size:.85rem;color:var(--ink-soft);line-height:1.6;}
+  .figrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:1.4rem;}
+  .pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:1px;
+        background:var(--rule);border:1px solid var(--rule);}
+  .pair > div{background:var(--ground);padding:1rem 1.1rem;
+              display:flex;flex-direction:column;gap:.35rem;}
+  .pair .k{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;color:var(--indigo);}
+  .pair .v{font-family:var(--mincho);font-size:1.02rem;font-weight:600;}
+  .pair .d{font-size:.84rem;color:var(--ink-soft);line-height:1.65;}
+  ol,ul{margin:0;padding-left:1.3rem;display:flex;flex-direction:column;gap:.5rem;}
+  ol.pred{list-style:none;padding-left:0;counter-reset:p;}
+  ol.pred li{counter-increment:p;padding-left:2.1rem;position:relative;}
+  ol.pred li::before{content:"予" counter(p);position:absolute;left:0;top:.1rem;
+    font-family:var(--mono);font-size:.68rem;color:var(--ochre);
+    border:1px solid var(--ochre);padding:.05rem .3rem;line-height:1.4;}
+  code{font-family:var(--mono);font-size:.85em;background:var(--chip);padding:.1em .35em;border-radius:2px;}
+  .status{display:flex;flex-direction:column;gap:.35rem;font-size:.9rem;}
+  .status div{display:flex;gap:.6rem;align-items:baseline;}
+  .status .mark{font-family:var(--mono);font-size:.8rem;color:var(--verdigris);}
+  .status .todo .mark{color:var(--oxide);}
+  footer{border-top:1px solid var(--rule);padding-top:1.2rem;
+         font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);line-height:1.8;}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">AI実務到達度インデックス／3本目</div>
+  <h1>cad-bench — 建築2D図面の作図</h1>
+  <p class="sub">AIはもうCADを描ける。<strong>幾何を難しくしても、腕の差はもう出ない。</strong>
+  30本の統制実験で点差を作ったものは、たった一つ——ライブラリの既定値だった。</p>
+  <div class="meta"><span>2026-07-09 着手</span><span>v0.2（2026-08-10）</span>
+    <span>5課題・3腕・統制30本</span><span>DOI 10.5281/zenodo.21847358</span></div>
+</header>
+
+<section>
+  <h2>何を測ったか</h2>
+  <p>間取りを <code>spec.json</code> で完全に与える。測るのは<em>作図能力だけ</em>で、設計能力は測らない。
+  こうすると正解が spec から一意に導出でき、<strong>非公開の実図面を必要としない。</strong>
+  「作図注記つきの正解データが手に入らない」という、このベンチが作られてこなかった最大の理由を回避できる。</p>
+
+  <div class="specimen">
+    <div class="tag">正解の定義</div>
+    <div class="head">壁 = 壁芯を ±(壁厚/2) で膨らませて union した領域</div>
+    <p>描くべき線 = (その領域 − 開口) の<strong>境界</strong>。T字接合のトリムも、開口の小口も、
+    斜め壁のマイターも、この定義から自動的に出る。作図者の癖が一切入らない。</p>
+  </div>
+
+  <div class="scroll"><table>
+    <tr><th>段</th><th>何を問うか</th><th>状態</th></tr>
+    <tr><td class="num">L0</td><td>DXFとして開けるか</td><td>採点</td></tr>
+    <tr><td class="num">L1</td><td>幾何が健全か（壁厚・被覆率・余計な線・レイヤ規約）</td><td>採点</td></tr>
+    <tr class="win"><td class="num">L2</td><td>寸法が本物か（DIMENSION、作図ブロック、<strong>表示される値</strong>）</td><td>採点</td></tr>
+    <tr><td class="num">L3</td><td>意味が合うか（開口の欠き込み・建具・室名・通り芯・面積）</td><td>採点</td></tr>
+    <tr><td class="num">L4</td><td>法規に適合するか（令23条の階段、法28条の採光・換気）</td><td>採点</td></tr>
+    <tr><td class="num">L5</td><td>製図の作法（文字の大きさ・線種・図面枠）</td><td>助言のみ</td></tr>
+  </table></div>
+
+  <p><em>L2 は「内部の計測値」ではなく「CADが実際に描く文字」を見る。</em>
+  ここを見落とすと、幾何が完璧で寸法だけ100倍の図面が満点になる。実際になった。</p>
+
+  <div class="pair">
+    <div><span class="k">ARM A</span><span class="v">生DXF直書き</span>
+      <span class="d">ライブラリ禁止・コード実行禁止・一発勝負。グループコードを1行ずつ手で打つ</span></div>
+    <div><span class="k">ARM B</span><span class="v">ezdxf 一発勝負</span>
+      <span class="d">ライブラリ可。ただし書いたコードを実行できない。採点者が一度だけ走らせる</span></div>
+    <div><span class="k">ARM C</span><span class="v">ezdxf + 検証ループ</span>
+      <span class="d">実行・レンダリング・自己修正を無制限に許可</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>幾何を難しくしても、分離しなかった</h2>
+
+  <p>同じ建物で座標の与え方だけを変えた2課題（T002 は数値で全部与える／T003 は通り芯記号から導出させる）を
+  armB で5回ずつ取った。<strong>導出させたほうが安定して高かった。</strong>設計意図と逆である。</p>
+
+  <p>理由は被験者10名の報告が一致していた。<em>T002 でも、壁面・マイター・T字の切り分け・小口は一つも与えていない。</em>
+  壁芯と厚さだけから全部導出させている。10名全員が45度隅の伸び <code>60·tan(22.5°)=24.853mm</code> を独立に手で出した。
+  T003 が上乗せしたのは記号の解決と中央出しで、<strong>模型が最も得意な作業</strong>だった。</p>
+
+  <p>そこで<strong>重い部分そのもの</strong>——offset して union して subtract する幾何——を変えた課題 T005 を作った。</p>
+
+  <div class="scroll"><table>
+    <tr><th>T005 で入れた不均一</th><th>狙い</th></tr>
+    <tr><td>外壁の厚さが揃わない（W-N だけ150、他210）</td><td>厚さの違う壁が隅で出会うと、外面と内面のマイター点が別の位置に出る</td></tr>
+    <tr><td>同一直線上で厚さが変わる（120→200）</td><td>x=1820 で壁面が段差になる</td></tr>
+    <tr><td>面芯の壁</td><td>面が通り芯にちょうど乗り、壁は片側だけに出る</td></tr>
+    <tr><td>2:1 勾配の斜め外壁</td><td>45度ではないので暗記した値が効かない</td></tr>
+    <tr><td>小口の縮退</td><td>開口の端が壁の端部にちょうど一致する</td></tr>
+  </table></div>
+
+  <p>課題には歯がある。<strong>壁厚を一様と誤読した実装は 79.9%</strong>（被覆率 9.2%）まで落ちる。
+  同じ誤読を T002 でやっても 100.0% のままなので、この落差は T005 が新しく作ったものである。</p>
+
+  <p><strong>それでも分離しなかった。</strong></p>
+
+  <div class="scroll"><table>
+    <tr><th>armB n=5</th><th class="num">中央値</th><th class="num">平均</th><th>内訳</th></tr>
+    <tr><td>T002 座標を数値で与える</td><td class="num">100.0%</td><td class="num">98.1%</td><td class="num dim">100.0 100.0 100.0 99.9 90.8</td></tr>
+    <tr><td>T003 通り芯記号から導出</td><td class="num">100.0%</td><td class="num">100.0%</td><td class="num dim">100.0 ×5</td></tr>
+    <tr class="win"><td>T005 取り合いが一様でない</td><td class="num">99.8%</td><td class="num">98.2%</td><td class="num dim">99.9 99.9 99.8 99.8 91.5</td></tr>
+  </table></div>
+
+  <p>T005 は T002 と区別できない。<strong>分布の形まで同じ</strong>——4本がほぼ満点、1本だけ落ちる。
+  そして落ちた1本の原因は幾何ではない（次節）。</p>
+
+  <h3>5本が小数第3位まで同じ答えを出した</h3>
+  <p>厚さ違いのマイターを、5本全部が正確に解いていた。外側 <code>(3724.787, 2805)</code>、
+  内側 <code>(3555.213, 2655)</code>、斜め壁のオフセット <code>105/√5 = 46.9574</code>。
+  斜め壁を <code>x+2y=9100</code> と立てて法線 <code>(1,2)/√5</code> で押す解き方まで一致していた。</p>
+
+  <div class="specimen">
+    <div class="tag">出題者が気づいていなかった帰結を、5本とも自力で見つけた</div>
+    <div class="head">I4 の北端は北壁に当たらない</div>
+    <p>W-N と W-D の内側マイターは x=3555.213 にあり、<strong>I4 の西面 3580 より西</strong>にある。
+    だから I4 は北壁ではなく<strong>斜め壁の内面で斜めに切れる</strong>——西面 y=2642.606、東面 y=2582.606。
+    仕様の注記は一言も触れていない。5本全員がこれを危険度1位に挙げ、
+    <em>「参照解が素朴に北壁で止めていたら食い違う」</em>と書いた。
+    union の定義がそのまま同じ答えを出すので、参照解も一致していた。</p>
+  </div>
+</section>
+
+<section>
+  <h2>30本で点差を作ったものは、1つしかない</h2>
+
+  <p><code>ezdxf.new(version, setup=True)</code> が作る <code>EZDXF</code> という寸法スタイルが、
+  既定で <code>dimlfac=100.0</code> / <code>dimtxt=0.25</code> を持っている。
+  <strong>メートルで描いてセンチで表示する図面の想定</strong>である。仕様は mm。</p>
+
+  <div class="figrow">
+    <div class="figure"><span class="n">91000</span>
+      <span class="cap">幅910mmの壁に印字される値。誰も <code>dimlfac</code> を書いていない。
+      ライブラリが推奨する自前のスタイルを素直に使っただけ</span></div>
+    <div class="figure"><span class="n">3 / 20</span>
+      <span class="cap">armB の n=5 を取った4課題のうち3課題で、それぞれ5本に1本が踏んだ。
+      能力ではなく、ライブラリの癖を知っているかのコイン投げ</span></div>
+  </div>
+
+  <div class="scroll"><table>
+    <tr><th>結果</th><th>使った dimstyle</th></tr>
+    <tr><td>DIMLFAC=100 で失敗（5件）</td><td class="num">EZDXF（既定のまま）</td></tr>
+    <tr class="win"><td>通過</td><td class="num">自前の dimstyle を作る／既定を疑って dimlfac=1.0 に上書き</td></tr>
+  </table></div>
+
+  <p>踏まなかった腕は明示的に書いている——<em>「EZDXF はメートル1:100前提なので、そのまま使うと 910 が
+  『91000』と表示されて全滅します。ここが今回いちばん怖い」。</em></p>
+
+  <p>一方で、こちらが難しくしようとして入れたもの——45度でない斜め、厚さの不一致、面芯、小口の縮退——は
+  <strong>一つも点差を作らなかった</strong>。模型は解析幾何を正確にやる。</p>
+
+  <h3>腕ごとに、散らばりの「形」が違う</h3>
+  <p>T004（法規判定つき・満点177）を3腕とも5回ずつ取った。点の高低より、失敗の形のほうが実務に効く。</p>
+
+  <div class="scroll"><table>
+    <tr><th>腕</th><th class="num">中央値</th><th class="num">最悪</th><th>最悪のときに何が起きるか</th></tr>
+    <tr><td>armA 生DXF</td><td class="num">94.2%</td><td class="num">0.0%</td><td>6,927行のうち<strong>1行</strong>の余分な <code>0</code> でファイルごと死ぬ。すぐ分かる</td></tr>
+    <tr><td>armB 一発</td><td class="num">99.6%</td><td class="num">91.1%</td><td>開くし幾何も法規も完璧で、<strong>寸法だけ100倍</strong>。印字を読むまで分からない</td></tr>
+    <tr class="win"><td>armC 検証ループ</td><td class="num">100.0%</td><td class="num">97.2%</td><td>全損も意味の誤りも出ていない</td></tr>
+  </table></div>
+
+  <p><em>ライブラリは破滅的な失敗を消す代わりに、静かな意味の誤りを持ち込む。</em>
+  armA の 0点は、生き残った実行が全部「自分の出力を読み返してチャンク境界を自己監査していた」のに対し、
+  死んだ実行だけがそれをしなかった結果だった。<strong>実行環境の無い腕にとって、唯一の検証手段は読み返しである。</strong></p>
+
+  <h3>満点の腕が買っているのはコストである</h3>
+  <div class="scroll"><table>
+    <tr><th>腕</th><th class="num">出力トークン/回</th><th class="num">ツール呼出/回</th><th class="num">中央値</th><th class="num">最悪値</th></tr>
+    <tr><td>armB 一発</td><td class="num">107,929</td><td class="num">9.2</td><td class="num">99.6%</td><td class="num">91.1%</td></tr>
+    <tr><td>armA 生DXF</td><td class="num">131,505</td><td class="num">20.6</td><td class="num">94.2%</td><td class="num">0.0%</td></tr>
+    <tr class="win"><td>armC ループ</td><td class="num">184,379</td><td class="num">57.6</td><td class="num">100.0%</td><td class="num">97.2%</td></tr>
+  </table></div>
+  <p>armC は armB の 1.7倍のトークンと 6.3倍のツール呼び出しを使う。
+  買っているのは中央値 0.4ポイントではなく、<em>最悪値 91.1% → 97.2%</em> のほうである。
+  「たまに寸法が100倍で出る」を「出ない」に変えるために払う額、と読むのが正しい。</p>
+</section>
+
+<section>
+  <h2>Chamfer も IoU も、この失敗を検出できない</h2>
+  <p>この穴が本当に空いているかを潰しにいった記録。</p>
+  <ul>
+    <li><strong>Autodesk 公式</strong>が「表示値が実長と一致しない原因＝<code>DIMLFAC</code>／テキスト上書き」を文書化している。
+      しかし自動検出は無い。<code>DIMREASSOC</code> も <code>QSELECT</code> も手動起動で、手打ち上書きしか捕まえず、
+      <code>DIMLFAC</code> は構造的に見逃す</li>
+    <li><strong>AI生成CADの評価研究</strong>は Chamfer / IoU / F1 / invalidity rate のみ。
+      寸法ラベルの意味論を測る指標が無い</li>
+    <li><strong>buildingSMART IDS</strong> は Solibri の原文で
+      "IDS currently does not have the capabilities to define intrinsic details of geometry."</li>
+    <li><strong>Dessia</strong> は実在する唯一の2D図面自動検査プレイヤー。図面 × BOM × 表題欄の整合は既に商品。
+      ただし寸法チェーン検査は印字値どうしを足すだけで、<code>DIMLFAC=100</code> の図面を満点で通す（実証済み）</li>
+    <li><strong>千葉県 照査項目チェックリスト</strong>は図面間整合・計算書照合・数量照合を要求するが、
+      「CAD」「自動」「ソフト」「表示値」の出現は<strong>すべて0件</strong>。人が紙に有／無を書く様式</li>
+  </ul>
+  <p>AIはもうCADを描ける。図面の中の「数字どうし」を照合する商品はある。
+  <em>しかし「数字と線」を照合するものは、まだどこにもない。</em></p>
+</section>
+
+<section>
+  <h2>採点基準の 28% は、わたしの意見である</h2>
+  <p>このシリーズは「参照解を自分で書かない」を掲げている。通関は税関の事前教示回答、税務は国税庁の質疑応答事例が
+  答えを持っている。<strong>cad は違う。</strong>答えは spec から決定論で導出されるので一意だが、
+  <em>「何を検査項目に選び、何点を配るか」はわたしの判断である。</em>そこを項目単位で開示する。</p>
+
+  <div class="scroll"><table>
+    <tr><th>出自</th><th class="num">配点</th><th>根拠</th></tr>
+    <tr><td>法令に直接の根拠</td><td class="num">39</td><td>建築基準法施行令23条（階段）、法28条1項・2項（採光・換気）</td></tr>
+    <tr><td>公的チェックリストの型</td><td class="num">63</td><td>千葉県 照査項目 4-10（<strong>壁厚を名指し</strong>）／4-5／4-7／4-11／5-1</td></tr>
+    <tr><td>JIS A 0150</td><td class="num">20</td><td>10章「位置の表示」＝通り芯／12.4「図に対する文字の位置」＝室名</td></tr>
+    <tr><td>JIS Z 8317-1（半分）</td><td class="num">5</td><td>3.3.2 注記2「寸法の単位は長さではミリメートル」。ただし「1:1で描く」は CAD の運用慣行</td></tr>
+    <tr class="win"><td><strong>根拠が見つからない</strong></td><td class="num">50</td><td>レイヤ規約・被覆率・建具符号。<strong>JIS にレイヤという概念そのものが無い</strong>（1999年の規格）</td></tr>
+  </table></div>
+
+  <p>規格に当てにいった結果、<strong>採点器の誤りが3件出た。</strong>
+  「通り芯は一点鎖線」は JIS A 0150 10.1.1 が「基準線は<em>通常、実線</em>」と定めており、規格に反していた。
+  「符号は丸囲み」は条件付きを必須にしていた。「文字は2.0mm以上」は
+  Z 8313-10 の呼び（漢字3.5／仮名2.5）のどれにも無い値で、しかも <code>MTEXT</code> を見ていなかった。</p>
+
+  <p>この3件が、L5 における腕の差を<strong>すべて</strong>作っていた。規格どおりに直すと、
+  12提出と参照解の計13ファイルが完全に横並びになる——<em>L5 は腕を1ミリも分離していない。</em>
+  「手書きの腕は高くつく作法を落としている」という所見は撤回した。</p>
+</section>
+
+<section>
+  <h2>こちらの誤りを8件潰した</h2>
+  <div class="scroll"><table>
+    <tr><th>種別</th><th>内容</th><th>見つけた経路</th></tr>
+    <tr><td>採点器</td><td>空の作図ブロック1個を全寸法で共有すると L2 が満点になる（CADには何も描かれない）</td><td>被験者の正直な自己申告</td></tr>
+    <tr><td>採点器</td><td>通り芯の一点鎖線を要求（JIS は実線が通常）</td><td>JIS A 0150</td></tr>
+    <tr><td>採点器</td><td>符号の丸囲みを必須化（JIS は条件付き）</td><td>JIS A 0150</td></tr>
+    <tr><td>採点器</td><td>文字高 2.0mm（呼びに無い値）＋ MTEXT を見ていない</td><td>JIS Z 8313-10</td></tr>
+    <tr><td>採点器</td><td><code>resolve()</code> が壁ごとの厚さを黙って捨てる。参照解が全部既定値で描かれていた</td><td>T005 を作って発覚</td></tr>
+    <tr><td>採点器</td><td>小口の除外に全体の壁厚を使い、それより厚い壁の小口を壁面と誤分類</td><td>参照解が自分の検査に落ちた</td></tr>
+    <tr class="win"><td>主張</td><td>「一番弱いはずの armA が一番強い」——n=1 の 100% は分布の上端だった</td><td>n=5</td></tr>
+    <tr class="win"><td>主張</td><td>「座標を与えれば転記の課題になる」——T002 も転記ではなかった</td><td>n=5</td></tr>
+  </table></div>
+  <p>点数を眺めていて出たものは、一つも無い。</p>
+</section>
+
+<section>
+  <h2>現在地と、残している弱点</h2>
+  <div class="status">
+    <div><span class="mark">済</span><span>5課題（T001〜T005）・3腕・較正済みの機械採点。参照解は5課題とも満点で通る</span></div>
+    <div><span class="mark">済</span><span>T004 を3腕 n=5、T002／T003／T005 を armB n=5。統制30本</span></div>
+    <div><span class="mark">済</span><span>採点基準を法令・JIS・公的チェックリストに項目単位で接地し、裏付けの無い28%を開示</span></div>
+    <div class="todo"><span class="mark">未</span><span><strong>T001 と、armA／armC の T001〜T003 は n=1。</strong>T004 で3腕とも n=1 の値が分布の端にあった以上、そこから順位を読んではいけない</span></div>
+    <div class="todo"><span class="mark">未</span><span><strong>50点分は外部の裏付けが無い。</strong>JIS を読んでも出てこない（規格にレイヤの概念が無い）。実務慣行を採点していると認めるほかない</span></div>
+    <div class="todo"><span class="mark">未</span><span><strong>armC の5本は独立試行ではない。</strong>5本に同じ venv を渡してしまい、ある腕が入れたライブラリを後続が拾えた</span></div>
+    <div class="todo"><span class="mark">未</span><span>図面枠は JIS Z 8311 6.1 で義務だが、spec が要求しておらず参照解も描いていないので点数化していない</span></div>
+  </div>
+
+  <div class="specimen">
+    <div class="tag">この回で分かったこと</div>
+    <div class="head">「どこまで描けるか」は、幾何ではもう測れない</div>
+    <p>作図能力は飽和している。測れるのは、図面が<strong>外の世界と食い違っていないか</strong>のほうである——
+    申告した建具表と図面、ライブラリの既定値と印字される文字、規格と作法。
+    <em>これは cad-bench 自身の設計思想（設計と作図を分離して作図能力だけを測る）を否定している。</em></p>
+  </div>
+</section>
+
+<footer>
+  cad-bench v0.2（2026-08-10）／ソースと全提出物：GitHub・DOI 10.5281/zenodo.21847358<br>
+  参照した規格：JIS A 0150:1999／JIS Z 8311:1998／JIS Z 8313-0・-10:1998／JIS Z 8317-1:2008（本文は非転載、条項番号と要約のみ）<br>
+  法令：建築基準法施行令23条、法28条1項・2項（e-Gov）／千葉県 照査項目チェックリスト（千葉県県土整備部）<br>
+  採点基準の項目別の出自は、リポジトリの <code>docs/CRITERIA.md</code> に全件を記載している。
+</footer>
+
+</div>
