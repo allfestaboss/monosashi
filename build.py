@@ -60,7 +60,16 @@ def bench_state(name):
 
 
 def version_notice(slug):
-    """版の対応を出す。(HTML, 追随が要るか) を返す。
+    """版の対応を出す。(HTML, 関門を落とすか) を返す。
+
+    **reviewed.json は2欄を別々に持つ。1欄で兼ねてはいけない。**
+
+      version      本文がどの版に対応するか。**事実**。読者に見せる（版差ブロックの根拠）
+      acknowledged 人がどの版まで読んで判断したか。**判断**。関門の根拠
+
+    兼ねると「版差ブロックを出したままデプロイする」ができなくなる。
+    ブロックが出る条件（本文が古い）と関門が落ちる条件（誰も読んでいない）は
+    別物で、**本文を据え置くと決めたなら前者は残り後者は解消する**のが正しい。
 
     一致  → 1行。 不一致 → 間の版の段落を **そのまま** 並べる。要約しない。
     要約した瞬間に二重管理が復活する。読みにくくても原文のほうが正しい。
@@ -75,18 +84,23 @@ def version_notice(slug):
         return "", False
 
     seen, cur, doi = mark["version"], st["version"], st["doi"]
+    ack = mark.get("acknowledged", seen)   # 無ければ本文の版と同じ＝未確認扱い
+    unread = _key(ack) < _key(cur)
     if seen == cur:
         return (f'<div class="vernote">この記事は <code>{mark["bench"]}</code> '
                 f'<strong>v{cur}</strong> に対応します（DOI {doi}）。</div>'), False
 
     newer = sorted((v for v in st["paragraphs"] if _key(v) > _key(seen)), key=_key)
     blocks = "".join(st["paragraphs"][v] for v in newer)
+    note = ("" if unread else
+            f'<div class="vd-n">{mark.get("note", "")}'
+            f'<span class="dim">（確認 {mark.get("ack_date", mark["date"])}）</span></div>')
     return (f'<div class="verdiff">'
             f'<div class="vd-h"><code>{mark["bench"]}</code> は '
             f'<strong>v{cur}</strong> に更新されています。'
             f'この記事は <strong>v{seen}</strong>（{mark["date"]}）に対応します。</div>'
             f'<div class="vd-b">以下は Zenodo に登録された変更記録の原文です'
-            f'（DOI {doi}）。</div>{blocks}</div>'), True
+            f'（DOI {doi}）。</div>{blocks}{note}</div>'), unread
 
 PAGES = [
     ("cad", "建築2D図面 DXF", "間取りを完全に与えて作図能力だけを測る", "2026-08"),
@@ -119,6 +133,9 @@ NAVCSS = """
     display:flex;flex-direction:column;gap:.7rem;}
   .verdiff .vd-h{font-family:var(--mincho);font-size:1.02rem;font-weight:600;line-height:1.6;}
   .verdiff .vd-b{font-family:var(--mono);font-size:.72rem;color:var(--ink-soft);}
+  .verdiff .vd-n{border-top:1px solid var(--rule);padding-top:.6rem;
+    font-size:.8rem;line-height:1.7;color:var(--ink-soft);}
+  .verdiff .dim{opacity:.75;}
   .verdiff p{font-size:.84rem;line-height:1.75;color:var(--ink-soft);margin:0;}
   .verdiff p strong{color:var(--ink);}
   .verdiff code{font-family:var(--mono);font-size:.85em;
@@ -269,5 +286,35 @@ def build_changes():
     print(f"  /changes/  {(out/'index.html').stat().st_size/1e3:.0f} KB")
 
 
+def check():
+    """書かずに版のドリフトだけ見る。日次ダイジェストから毎晩呼ぶ用。
+
+    **build の関門だけでは、実際に起きた壊れ方を捕まえられない。**
+    2026-08-10〜12 に5リポが新版を出したがサイトは誰も触らず、build を
+    走らせていないので関門は一度も鳴らなかった。デプロイ時にしか見ない検査は、
+    デプロイしない期間のドリフトに無力である。だから毎晩こちらから見に行く。
+    """
+    behind, ok = [], []
+    for slug, *_ in PAGES:
+        mark_path = SITE / slug / "reviewed.json"
+        if not mark_path.exists():
+            continue
+        mark = json.loads(mark_path.read_text(encoding="utf-8"))
+        st = bench_state(mark["bench"])
+        if st is None or not st["version"]:
+            continue
+        ack = mark.get("acknowledged", mark["version"])
+        if _key(ack) < _key(st["version"]):
+            behind.append((slug, mark["bench"], ack, st["version"]))
+        else:
+            ok.append((slug, mark["bench"], st["version"]))
+    for slug, bench, ack, cur in behind:
+        print(f"  [!] /{slug}/  {bench} が v{cur} に進んでいる（確認済みは v{ack}）")
+    if not behind:
+        print(f"  版のドリフトなし（{len(ok)}ページ確認）")
+    return 1 if behind else 0
+
+
 if __name__ == "__main__":
-    raise SystemExit(main())
+    import sys
+    raise SystemExit(check() if "--check" in sys.argv else main())
