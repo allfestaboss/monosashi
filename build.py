@@ -12,12 +12,81 @@ Artifact として作った職種ごとの1枚を本文に使い、共通の外�
 使い方:
     python3 build.py
 """
+import json
 import pathlib
 import re
 
 ROOT = pathlib.Path(__file__).resolve().parent
 SITE = ROOT / "site"
 DIST = ROOT / "dist"
+
+# ベンチの正本。**撤回文はここからしか読まない。**サイト側に書き写さない。
+# 書き写すと同じ文が2箇所に存在し、片方が腐る（zeimu の関税率表と同じ失敗）。
+BENCH = ROOT.parent / "big-business"
+
+# `<p>` の本文が `Version X.Y.Z` で始まる段落＝その版の変更記録。
+# 9リポの .zenodo.json で較正済み（誤検出ゼロ・取りこぼしゼロ）。
+# 本文中の言及（"repairing the v1.1.0 defect"）は**数えない**。
+_BLOCK = re.compile(r"<p>.*?</p>", re.S)
+_HEAD = re.compile(r"^\s*Version\s+(\d+\.\d+\.\d+)")
+
+
+def _key(v):
+    return [int(x) for x in v.split(".")]
+
+
+def bench_state(name):
+    """ベンチの現行版・DOI・版段落を読む。読めなければ None。"""
+    repo = BENCH / name
+    cff = repo / "CITATION.cff"
+    zj = repo / ".zenodo.json"
+    if not cff.exists() or not zj.exists():
+        return None
+    t = cff.read_text(encoding="utf-8")
+    ver = re.search(r'^version:\s*"?([^"\s]+)"?', t, re.M)
+    doi = re.search(r'^doi:\s*"?([^"\s]+)"?', t, re.M)
+    desc = json.loads(zj.read_text(encoding="utf-8")).get("description", "")
+    paras = {}
+    for m in _BLOCK.finditer(desc):
+        text = re.sub("<[^>]+>", "", m.group(0))
+        h = _HEAD.match(text)
+        if h:
+            paras[h.group(1)] = m.group(0)
+    return {
+        "version": ver.group(1) if ver else None,
+        "doi": doi.group(1) if doi else None,
+        "paragraphs": paras,
+    }
+
+
+def version_notice(slug):
+    """版の対応を出す。(HTML, 追随が要るか) を返す。
+
+    一致  → 1行。 不一致 → 間の版の段落を **そのまま** 並べる。要約しない。
+    要約した瞬間に二重管理が復活する。読みにくくても原文のほうが正しい。
+    枠の日本語は全て変数の差し込みで、こちらが書いた文は1つも無い。
+    """
+    mark_path = SITE / slug / "reviewed.json"
+    if not mark_path.exists():
+        return "", False
+    mark = json.loads(mark_path.read_text(encoding="utf-8"))
+    st = bench_state(mark["bench"])
+    if st is None or not st["version"]:
+        return "", False
+
+    seen, cur, doi = mark["version"], st["version"], st["doi"]
+    if seen == cur:
+        return (f'<div class="vernote">この記事は <code>{mark["bench"]}</code> '
+                f'<strong>v{cur}</strong> に対応します（DOI {doi}）。</div>'), False
+
+    newer = sorted((v for v in st["paragraphs"] if _key(v) > _key(seen)), key=_key)
+    blocks = "".join(st["paragraphs"][v] for v in newer)
+    return (f'<div class="verdiff">'
+            f'<div class="vd-h"><code>{mark["bench"]}</code> は '
+            f'<strong>v{cur}</strong> に更新されています。'
+            f'この記事は <strong>v{seen}</strong>（{mark["date"]}）に対応します。</div>'
+            f'<div class="vd-b">以下は Zenodo に登録された変更記録の原文です'
+            f'（DOI {doi}）。</div>{blocks}</div>'), True
 
 PAGES = [
     ("cad", "建築2D図面 DXF", "間取りを完全に与えて作図能力だけを測る", "2026-08"),
@@ -28,7 +97,7 @@ PAGES = [
 NAV = """<nav class="site-nav">
   <a class="brand" href="/">物差し</a>
   <span class="navlinks">
-    <a href="/cad/">建築CAD</a><a href="/kanzei/">通関</a><a href="/zeimu/">税務</a><a href="/method/">測り方</a>
+    <a href="/cad/">建築CAD</a><a href="/kanzei/">通関</a><a href="/zeimu/">税務</a><a href="/method/">測り方</a><a href="/changes/">変更と撤回</a>
   </span>
 </nav>"""
 
@@ -43,15 +112,27 @@ NAVCSS = """
   .site-nav a:hover,.site-nav a:focus-visible{color:var(--verdigris);text-decoration:underline;}
   .site-nav a:focus-visible{outline:2px solid var(--verdigris);outline-offset:3px;}
   .wrap{padding-top:2.5rem;}
+  .vernote{max-width:47rem;margin:1.6rem auto -1rem;padding:0 1.5rem;
+    font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);}
+  .verdiff{max-width:47rem;margin:1.6rem auto -.5rem;padding:1rem 1.2rem;
+    border:2px solid var(--oxide);background:var(--ground2);
+    display:flex;flex-direction:column;gap:.7rem;}
+  .verdiff .vd-h{font-family:var(--mincho);font-size:1.02rem;font-weight:600;line-height:1.6;}
+  .verdiff .vd-b{font-family:var(--mono);font-size:.72rem;color:var(--ink-soft);}
+  .verdiff p{font-size:.84rem;line-height:1.75;color:var(--ink-soft);margin:0;}
+  .verdiff p strong{color:var(--ink);}
+  .verdiff code{font-family:var(--mono);font-size:.85em;
+    background:var(--chip);padding:.1em .35em;border-radius:2px;}
 """
 
 
-def wrap(body_html, title, desc):
-    """Artifact の本文に、共通の head とナビを付ける。"""
+def wrap(body_html, title, desc, notice=""):
+    """Artifact の本文に、共通の head とナビを付ける。**本文は書き直さない。**"""
     style = re.search(r"<style>(.*?)</style>", body_html, re.S)
     css = (style.group(1) if style else "") + NAVCSS
     inner = re.sub(r"<title>.*?</title>\s*", "", body_html, flags=re.S)
     inner = re.sub(r"<style>.*?</style>\s*", "", inner, flags=re.S)
+    inner = notice + inner
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -73,16 +154,21 @@ def wrap(body_html, title, desc):
 
 def main():
     DIST.mkdir(exist_ok=True)
+    stale = []
     for slug, title, desc, _ in PAGES:
         src = SITE / slug / "body.html"
         if not src.exists():
             print(f"  ! {slug}/body.html が無い")
             continue
+        notice, behind = version_notice(slug)
+        if behind:
+            stale.append(slug)
         out = DIST / slug
         out.mkdir(parents=True, exist_ok=True)
         (out / "index.html").write_text(
-            wrap(src.read_text(encoding="utf-8"), title, desc), encoding="utf-8")
-        print(f"  /{slug}/  {(out/'index.html').stat().st_size/1e3:.0f} KB")
+            wrap(src.read_text(encoding="utf-8"), title, desc, notice), encoding="utf-8")
+        print(f"  /{slug}/  {(out/'index.html').stat().st_size/1e3:.0f} KB"
+              f"{'  ← 版が進んでいる' if behind else ''}")
 
     for name in ("index", "method"):
         src = SITE / (f"{name}.html" if name == "index" else f"{name}/body.html")
@@ -98,9 +184,90 @@ def main():
         print(f"  /{'' if name=='index' else name+'/'}  "
               f"{(out/'index.html').stat().st_size/1e3:.0f} KB")
 
+    build_changes()
+
     tot = sum(p.stat().st_size for p in DIST.rglob("*.html"))
     print(f"→ {DIST}  {len(list(DIST.rglob('*.html')))} ページ / {tot/1e3:.0f} KB")
 
+    if stale:
+        print()
+        print(f"[NG] 版が進んだのに確認印が古い: {', '.join(stale)}")
+        print("     ページは生成してある。**差し込まれた内容を見てから**")
+        print("     site/<slug>/reviewed.json の version と date を進めること。")
+        print("     （見る前に印を打つと、確認するために確認印を打つ順序の逆転になる）")
+        return 1
+    return 0
+
+
+# 掲載していない本も載せる。掲載の有無は読者の都合で、撤回の有無とは関係がない。
+LEDGER = [
+    ("kanzei-bench", "通関 HS分類", "/kanzei/"),
+    ("zeimu-bench", "税務 根拠条文", "/zeimu/"),
+    ("cad-bench", "建築2D図面 DXF", "/cad/"),
+    ("sekisan-bench", "積算", None),
+    ("doboku-bench", "土木CAD SXF", None),
+    ("jiban-bench", "地盤 液状化判定", None),
+    ("kikai-bench", "機械 STEP AP242", None),
+    ("bim-bench", "建築BIM IFC", None),
+    ("ai-reach-paper", "方法論論文（プレプリント）", None),
+]
+
+
+def build_changes():
+    """/changes/ — 全ベンチ横断の版と撤回の台帳。
+
+    論文 §6.3 が「欠陥件数は公表すべきで、公表しないベンチマークは
+    『見ていない』のか『言っていない』のか読者に区別がつかない」と主張している。
+    その公開面がこれ。**文面は1つも書かない。**全て .zenodo.json から読む。
+    """
+    rows, blocks = [], []
+    for name, label, href in LEDGER:
+        st = bench_state(name)
+        if st is None:
+            continue
+        vers = sorted(st["paragraphs"], key=_key)
+        link = f'<a href="{href}">{label}</a>' if href else f'{label}<span class="dim">（未掲載）</span>'
+        rows.append(
+            f'<tr><td>{link}</td><td class="num">v{st["version"]}</td>'
+            f'<td class="num">{len(vers)}</td>'
+            f'<td class="num dim">{st["doi"] or "—"}</td></tr>')
+        if vers:
+            blocks.append(
+                f'<section><h2>{label} <span class="dim">{name}</span></h2>'
+                + "".join(st["paragraphs"][v] for v in reversed(vers))
+                + "</section>")
+
+    body = f"""<title>変更と撤回</title>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Changes &amp; retractions</div>
+  <h1>変更と撤回</h1>
+  <p class="sub">出した結果を後から取り下げたときの記録を、まとめてここに置く。
+  サイトに載せていない業種も含める。<strong>載せているかどうかは読者の都合であって、
+  撤回があったかどうかとは関係がない。</strong></p>
+</header>
+<section>
+  <h2>いまの版</h2>
+  <div class="scroll"><table>
+  <tr><th>業種</th><th>現行版</th><th>版の記録</th><th>DOI（この版）</th></tr>
+  {''.join(rows)}
+  </table></div>
+  <p class="dim">この表もこの下の原文も、各リポジトリの <code>.zenodo.json</code> と
+  <code>CITATION.cff</code> から生成している。<strong>このページに手で書いた文は無い。</strong>
+  撤回の記録を2箇所に持つと、片方が腐るため。</p>
+</section>
+{''.join(blocks)}
+<footer>
+  原文は Zenodo に登録された英文をそのまま出している。訳すと、それが2箇所目の撤回文になる。
+</footer>
+</div>"""
+    out = DIST / "changes"
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "index.html").write_text(
+        wrap(body, "変更と撤回", "出した結果を後から取り下げたときの記録"),
+        encoding="utf-8")
+    print(f"  /changes/  {(out/'index.html').stat().st_size/1e3:.0f} KB")
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
