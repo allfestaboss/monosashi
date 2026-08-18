@@ -1,7 +1,5 @@
 # monosashi.work — 物差し（AI実務到達度インデックスの公開サイト）
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22002590.svg)](https://doi.org/10.5281/zenodo.22002590)
-
 https://monosashi.work
 
 職種ごとに、AIが実務をどこまでやれるかを同じ物差しで実測して公開する
@@ -53,13 +51,3 @@ python3 build.py --check   # 書かずに版のドリフトだけ見る（日次
 
 サイトの文章と生成コードは MIT。各業種の測定・データ・参照解は
 それぞれのベンチのリポジトリとライセンスに従う。
-
-## 引用
-
-```
-Ohkubo, B. (2026). monosashi.work: 撤回文を一文字も持たずに撤回を出す公開サイト (v1.0.0).
-Zenodo. https://doi.org/10.5281/zenodo.22002591
-```
-
-- Concept DOI（常に最新版）: [10.5281/zenodo.22002590](https://doi.org/10.5281/zenodo.22002590)
-- Version DOI（v1.0.0）: [10.5281/zenodo.22002591](https://doi.org/10.5281/zenodo.22002591)

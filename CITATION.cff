@@ -1,5 +1,9 @@
 cff-version: 1.2.0
-message: "本ソフトウェアを利用した場合は、以下を引用してください。 / If you use this software, please cite it as below."
+# このリポジトリはサイトの生成器であって研究成果ではない。引用対象として掲げない。
+# 引用すべきは各業種のベンチと方法論の論文（NOTICE にDOIの一覧がある）。
+# 2026-08-19 に一度 Zenodo でDOIを発行してしまった（10.5281/zenodo.22002590）。
+# 発行済みDOIは取り消せないので、掲げるのをやめることで扱いを揃える。
+message: "引用する場合は、このサイトではなく各業種のベンチか方法論の論文（NOTICE 参照）を引用してください。"
 type: software
 
 title: "monosashi.work: 撤回文を一文字も持たずに撤回を出す公開サイト"
@@ -42,17 +46,6 @@ authors:
 version: "1.0.0"
 date-released: "2026-08-19"
 license: MIT
-
-# この版（v1.0.0）を指す DOI
-doi: "10.5281/zenodo.22002591"
-
-identifiers:
-  - type: doi
-    value: "10.5281/zenodo.22002590"
-    description: "Concept DOI — 常に最新版に解決する。版を問わず本ソフトウェアを引用する場合はこちら。"
-  - type: doi
-    value: "10.5281/zenodo.22002591"
-    description: "Version DOI — v1.0.0 を指す。"
 
 url: "https://monosashi.work/"
 repository-code: "https://github.com/allfestaboss/monosashi"
