@@ -1,0 +1,36 @@
+{
+  "title": "monosashi.work: 撤回文を一文字も持たずに撤回を出す公開サイト",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "language": "jpn",
+  "creators": [
+    {
+      "name": "Ohkubo, Boss",
+      "affiliation": "Allfesta Corp.",
+      "orcid": "0009-0007-8300-0039"
+    }
+  ],
+  "description": "<p>The public face of an index that measures, with one common yardstick, how far AI reaches into the actual work of licensed professions. The measurements live in per-profession benchmark repositories; this repository holds only the site text and its generator.</p><p><strong>Design point: retraction.</strong> Benchmarks keep issuing versions and sometimes retract results. If the site copies that prose, the same sentence exists in two places and one of them rots. So this repository stores <strong>no retraction text at all</strong>. The authority is each benchmark's own <code>.zenodo.json</code> (the change paragraphs) and <code>CITATION.cff</code> (version and DOI); the build reads them, compares the version an article was written against with the current version, and splices the intervening paragraphs in verbatim. Summarising them would reintroduce the duplication it exists to prevent.</p><p><strong>Two fields kept separate on purpose:</strong> <code>version</code> is what the article corresponds to (a fact, shown to readers); <code>acknowledged</code> is how far a human has read and judged (a decision, the basis of the gate). Merging them makes “deployed while the version gap is disclosed” inexpressible. The gate returns a non-zero exit code rather than failing the build, so spliced content can be read before it is acknowledged — failing the build would require acknowledging in order to see what is being acknowledged. A nightly <code>--check</code> covers drift during periods with no deploy, which the build-time gate cannot see.</p><p>職種ごとにAIが実務をどこまでやれるかを同じ物差しで測って公開する「AI実務到達度インデックス」の公開面。<strong>撤回文を1文字も置かない</strong>構造で、正本は各ベンチの .zenodo.json と CITATION.cff にしかない。</p><p><strong>Note on data:</strong> No measurement data, reference answers or third-party material are bundled. Each benchmark repository is authoritative and carries its own license and attribution; see NOTICE.</p>",
+  "keywords": [
+    "research transparency",
+    "retraction",
+    "single source of truth",
+    "versioning",
+    "benchmark",
+    "AI capability",
+    "static site generator"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://monosashi.work/",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.5281/zenodo.21862231",
+      "relation": "isPartOf",
+      "scheme": "doi"
+    }
+  ]
+}

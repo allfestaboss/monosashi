@@ -1,0 +1,21 @@
+monosashi.work
+Copyright (c) 2026 Boss Ohkubo / Allfesta Corp.
+
+このリポジトリはサイトの文章と生成コードだけを持つ。
+This repository contains only the site text and its generator.
+
+**測定・データ・参照解は同梱していない。**各業種のベンチが正本であり、
+それぞれのライセンスと出典表示に従う。
+
+  jiban-bench    10.5281/zenodo.21847239    国土地理院KuniJiban ほか
+  doboku-bench   10.5281/zenodo.21847241
+  sekisan-bench  10.5281/zenodo.21847243    公共建築数量積算基準（引用の範囲）
+  zeimu-bench    10.5281/zenodo.21847245    国税庁（政府標準利用規約 v1.0）
+  kikai-bench    10.5281/zenodo.21847247    NIST / CAx-IF
+  bim-bench      10.5281/zenodo.21847249    buildingSMART Sample-Test-Files（CC BY 4.0）
+  kanzei-bench   10.5281/zenodo.21847251    税関（政府標準利用規約）
+  cad-bench      10.5281/zenodo.21847358
+  cad-cross      10.5281/zenodo.21862368
+  方法論の論文    10.5281/zenodo.21862231    CC BY 4.0
+
+サイト本文が公的資料に言及する箇所は、いずれも引用であって再配布ではない。

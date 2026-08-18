@@ -1,0 +1,65 @@
+cff-version: 1.2.0
+message: "本ソフトウェアを利用した場合は、以下を引用してください。 / If you use this software, please cite it as below."
+type: software
+
+title: "monosashi.work: 撤回文を一文字も持たずに撤回を出す公開サイト"
+
+abstract: >-
+  The public face of an index that measures, with one common yardstick, how far
+  AI reaches into the actual work of licensed professions. The measurements
+  themselves live in per-profession benchmark repositories; this repository
+  holds only the site text and its generator.
+
+  Its design point is retraction. Benchmarks keep issuing versions and sometimes
+  retract results. If the site copies that prose, the same sentence exists in two
+  places and one of them rots. So this repository stores **no retraction text at
+  all**. The authority is each benchmark's own `.zenodo.json` (the change
+  paragraphs) and `CITATION.cff` (version and DOI); the build reads them, compares
+  the version an article was written against with the current version, and splices
+  the intervening paragraphs in verbatim. Summarising them would reintroduce the
+  duplication it exists to prevent.
+
+  Two fields are kept separate on purpose: `version` is what the article
+  corresponds to (a fact, shown to readers) and `acknowledged` is how far a human
+  has read and judged (a decision, the basis of the gate). Merging them makes
+  "deployed while the version gap is disclosed" inexpressible. The gate returns a
+  non-zero exit code rather than failing the build, so that spliced content can be
+  read before it is acknowledged — failing the build would invert the order and
+  require acknowledging in order to see what is being acknowledged. A nightly
+  `--check` covers drift during periods with no deploy, which the build-time gate
+  cannot see.
+
+  職種ごとにAIが実務をどこまでやれるかを同じ物差しで測って公開する
+  「AI実務到達度インデックス」の公開面。**撤回文を1文字も置かない**構造で、
+  正本は各ベンチの .zenodo.json と CITATION.cff にしかない。
+
+authors:
+  - family-names: "Ohkubo"
+    given-names: "Boss"
+    affiliation: "Allfesta Corp."
+    orcid: "https://orcid.org/0009-0007-8300-0039"
+
+version: "1.0.0"
+date-released: "2026-08-19"
+license: MIT
+
+url: "https://monosashi.work/"
+repository-code: "https://github.com/allfestaboss/monosashi"
+
+keywords:
+  - research transparency
+  - retraction
+  - single source of truth
+  - versioning
+  - benchmark
+  - AI capability
+  - static site generator
+
+references:
+  - type: software
+    title: "AI実務到達度インデックスの方法論"
+    authors:
+      - family-names: "Ohkubo"
+        given-names: "Boss"
+    doi: "10.5281/zenodo.21862231"
+    notes: "本サイトが公開面となっているインデックスの方法論（プレプリント・CC BY 4.0）"
