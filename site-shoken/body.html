@@ -1,0 +1,264 @@
+<title>どこかは当たる、何かは当たらない</title>
+<style>
+  :root{
+    color-scheme: light;
+    --ground:#E9E7DF; --surface:#F2F0E9; --surface2:#E2DFD4;
+    --ink:#23211C; --muted:#6E6A5E; --rule:#C9C6B8;
+    --teal:#1F5C55; --rust:#8A3B2E; --sand:#B08A46;
+    --ja:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium",Meiryo,sans-serif;
+    --mincho:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--ja);
+    font-size:15px;line-height:1.85;letter-spacing:.03em;
+    font-feature-settings:"palt" 1,"kern" 1;
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  p,li,td,th{word-break:normal;overflow-wrap:break-word;line-break:strict}
+  .wrap{max-width:900px;margin:0 auto;padding:52px 24px 80px}
+
+  header{border-bottom:2px solid var(--ink);padding-bottom:24px;margin-bottom:8px}
+  .eyebrow{font-size:11.5px;letter-spacing:.22em;color:var(--rust);margin:0 0 12px}
+  h1{font-family:var(--mincho);font-size:clamp(30px,6vw,48px);line-height:1.3;
+    letter-spacing:.01em;margin:0 0 16px;font-weight:600;text-wrap:balance}
+  .lede{margin:0;max-width:60ch;font-size:16px}
+  .stamp{font-size:12px;color:var(--muted);margin:16px 0 0;letter-spacing:.05em}
+
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:1px;background:var(--rule);border:1px solid var(--rule);margin:26px 0 40px}
+  .fact{background:var(--ground);padding:14px 16px}
+  .fact .n{display:block;font-family:var(--mincho);font-size:26px;line-height:1.15;
+    font-variant-numeric:tabular-nums}
+  .fact .k{display:block;font-size:11.5px;color:var(--muted);letter-spacing:.06em;margin-top:3px}
+
+  h2{font-family:var(--mincho);font-size:21px;font-weight:600;letter-spacing:.02em;
+    margin:0 0 8px;padding-bottom:9px;border-bottom:1px solid var(--rule)}
+  .sec{margin-top:50px}
+  .num{color:var(--rust);font-size:13px;letter-spacing:.14em;margin-right:.5em}
+  .note{color:var(--muted);font-size:13.5px;margin:10px 0 20px;max-width:64ch}
+  p.body{max-width:64ch}
+
+  .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{border-collapse:collapse;width:100%;min-width:480px;
+    font-variant-numeric:tabular-nums;font-size:14px}
+  caption{text-align:left;font-size:12.5px;color:var(--muted);padding-bottom:8px}
+  th,td{padding:9px 10px;border-bottom:1px solid var(--rule);text-align:right;white-space:nowrap}
+  th:first-child,td:first-child{text-align:left;white-space:normal}
+  thead th{font-size:12px;letter-spacing:.07em;color:var(--muted);font-weight:600;
+    border-bottom:1.5px solid var(--ink)}
+  tr.win td{background:#DCE7E3;font-weight:700}
+  tr.win td:first-child{box-shadow:inset 4px 0 0 var(--teal)}
+  tr.dim td{color:var(--muted)}
+  .up{color:var(--teal)}.flat{color:var(--muted)}.down{color:var(--rust)}
+  .u{font-size:11.5px;color:var(--muted);margin-left:2px}
+
+  .why{background:var(--surface);border-left:3px solid var(--sand);padding:16px 20px;margin-top:18px}
+  .why p{margin:0 0 9px}.why p:last-child{margin-bottom:0}
+  .limits{background:var(--surface);border:1px solid var(--rule);padding:20px 24px;margin-top:20px}
+  .limits ul{margin:0;padding-left:1.3em}
+  .limits li{margin:0 0 12px}.limits li:last-child{margin-bottom:0}
+  strong{font-weight:700}
+  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);
+    font-size:12.5px;color:var(--muted)}
+  footer ul{margin:8px 0 0;padding-left:1.2em}footer li{margin:3px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;
+    background:var(--surface2);padding:1px 5px;border-radius:3px}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">全国 500mメッシュ / 店舗立地</p>
+  <h1>どこかは当たる、何かは当たらない</h1>
+  <p class="lede">「何人いればその地域で商売が成り立つか」を業界の目安ではなく実データから測ろうとして、当てられることと当てられないことの境界に行き着いた記録。すべて公的統計と再配布可能なデータで、スクレイピングは使っていない。</p>
+  <p class="stamp">全国471,024メッシュ・1億2,532万人 ／ 30業種 ／ 実際の開店74,507件で前向きに検証</p>
+  <p class="stamp" style="margin-top:8px">コードと集計済みデータ　<a href="https://github.com/allfestaboss/shoken-model" style="color:var(--teal)">github.com/allfestaboss/shoken-model</a>　／　DOI <a href="https://doi.org/10.5281/zenodo.21989889" style="color:var(--teal)">10.5281/zenodo.21989889</a></p>
+</header>
+
+<div class="facts">
+  <div class="fact"><span class="n">7.5倍</span><span class="k">空きマスの順位づけ</span></div>
+  <div class="fact"><span class="n">46県</span><span class="k">移転を確認した数</span></div>
+  <div class="fact"><span class="n">0.508</span><span class="k">「何の店か」のAUC</span></div>
+  <div class="fact"><span class="n">1つ</span><span class="k">効いた特徴量</span></div>
+</div>
+
+<section class="sec">
+  <h2><span class="num">1</span>まだ1店も無いマスの順位づけは当たる</h2>
+  <p class="note">実際に開いた店を、モデルが上位10%に選んだマスがどれだけ捕まえたか。でたらめなら10%のところを75.1%捕まえた。</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>業態</th><th>検証に使った新店</th><th>倍率</th><th>95%信頼区間</th></tr></thead>
+    <tbody>
+      <tr class="win"><td>コンビニ</td><td>1,236</td><td>7.5倍</td><td>7.3 〜 7.7</td></tr>
+      <tr><td>ドラッグ・薬局</td><td>129</td><td>8.4倍</td><td>7.6 〜 8.9</td></tr>
+      <tr><td>スーパー</td><td>156</td><td>8.3倍</td><td>7.6 〜 8.8</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="why">
+    <p><strong>ただし絶対値は小さい。</strong>上位10%に選ばれたマスでも、1年で店ができる確率は2.17%（全体は0.29%）。「ここに店ができる」ではなく「ここは平均の7.5倍できやすい」という道具である。</p>
+  </div>
+</section>
+
+<section class="sec">
+  <h2><span class="num">2</span>全国1つのモデルで足りる</h2>
+  <p class="body">福岡県だけで学習した係数を他県にそのまま当てて、現地で学習した場合との差は最大 +0.031。秋田県では福岡で学習したほうが良かった（標本が大きいため）。県を1つずつ隠す46回の検証でも倍率の中央値7.2倍。</p>
+  <div class="why">
+    <p>面白いのは<strong>係数は県で動くのに予測は動かない</strong>こと。<code>log人口</code> の係数は福岡0.230／佐賀0.576／長崎0.111 と3倍違うが、特徴量どうしが相関しているので出てくる予測は一致する。係数を読んで意味を語るなら県ごとに見るべきだが、当てるだけなら1つでよい。</p>
+  </div>
+</section>
+
+<section class="sec">
+  <h2><span class="num">3</span>「この地域には何の店ができるか」は当てられない</h2>
+  <p class="note">同じモデルでも問いの向きで結果が変わる。10業種・47県・74,507件の開店データで3通り測って、いずれも信号が無かった。</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>測り方</th><th>結果</th></tr></thead>
+    <tbody>
+      <tr><td>県単位・二重中心化<span class="u">（県の差と業種の差を抜く）</span></td><td>r = +0.085（t = +1.5）</td></tr>
+      <tr class="dim"><td>メッシュ単位・業種ごとのAUC</td><td>平均 0.508</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="why">
+    <p>理由ははっきりしている。<strong>特徴量に業種を分ける情報が無い。</strong>人口・従業者・道路・駅・土地利用は、どの業種にも同じ向きに効く。コンビニに良いマスはドラッグにもレストランにも良い。</p>
+  </div>
+</section>
+
+<section class="sec">
+  <h2><span class="num">4</span>効いたのは従業者数だけだった</h2>
+  <p class="note">思いつく候補を順に足したが、動いたのは1つだけ（市街地に絞ったAUCの差）。</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>足した情報</th><th>コンビニ</th><th>ドラッグ</th><th>スーパー</th></tr></thead>
+    <tbody>
+      <tr><td>年齢構成</td><td class="flat">+0.006</td><td class="flat">±0.000</td><td class="flat">−0.001</td></tr>
+      <tr><td>他業態の集積</td><td class="flat">+0.004</td><td class="flat">+0.015</td><td class="flat">+0.008</td></tr>
+      <tr><td>地価<span class="u">（1,840地点を内挿）</span></td><td class="flat">+0.006</td><td class="flat">+0.005</td><td class="flat">+0.009</td></tr>
+      <tr><td>建物数</td><td class="flat">+0.001</td><td class="flat">−0.001</td><td class="flat">+0.001</td></tr>
+      <tr class="win"><td>従業者数<span class="u">（経済センサス500mメッシュ）</span></td><td class="up">+0.035</td><td class="up">+0.039</td><td class="up">+0.057</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="why">
+    <p>従業者数を入れると<strong>地価も他業態の集積も効かなくなる</strong>。どちらも昼間の需要の代理だった。駅の乗降客数（全国10,482駅）も同じく吸収される。</p>
+    <p><strong>年齢は全業種で効かない。</strong>保育園（0-4歳）・学習塾（5-19歳）・病院（高齢）でも動かない。年齢別人口は総人口と対数で r=0.98〜0.99 あり、独立な情報を持っていないため。500m四方では年齢構成のばらつき（変動係数0.32）が人口そのもののばらつき（0.97）に対して小さすぎる。</p>
+  </div>
+</section>
+
+<section class="sec">
+  <h2><span class="num">5</span>集積の正体はドミナント出店だった</h2>
+  <p class="note">Foursquareの <code>website</code> のドメインでチェーンを識別できる。新規開店2,148件を屋号で分け、周辺3×3の「コンビニのうち自社が占める割合」で自社の新店を他社の新店と見分けられるかを測った。</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>チェーン</th><th>AUC</th><th>全国シェア</th></tr></thead>
+    <tbody>
+      <tr class="win"><td>ミニストップ</td><td>0.934</td><td>2.9%</td></tr>
+      <tr><td>ファミリーマート</td><td>0.706</td><td>24.5%</td></tr>
+      <tr><td>ローソン</td><td>0.694</td><td>21.8%</td></tr>
+      <tr><td>セブン-イレブン</td><td>0.569</td><td>33.2%</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">全チェーンが自社の近くに出している。全国シェアが小さいチェーンほどはっきり出る（セブンはどこにでもあるので「自社シェア」という指標の情報量が小さくなる）。</p>
+</section>
+
+<section class="sec">
+  <h2><span class="num">6</span>チェーンと個店は反発する</h2>
+  <p class="note">同じ業種でも、開店を言い当てるのは正反対のほうだった（市街地AUC）。</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>業種</th><th>個店比率</th><th>チェーン密度</th><th>個店密度</th></tr></thead>
+    <tbody>
+      <tr><td>コンビニ</td><td>11.5%</td><td class="up">0.540</td><td class="down">0.429</td></tr>
+      <tr><td>パン屋</td><td>93.6%</td><td class="down">0.379</td><td class="up">0.577</td></tr>
+      <tr class="win"><td>居酒屋・バー</td><td>95.6%</td><td class="down">0.322</td><td class="up">0.631</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="why">
+    <p>負けた側が0.5を<strong>下回る</strong>のが肝。新しい個店の居酒屋はチェーン居酒屋のある場所を避け、新しいコンビニは個店コンビニのある場所を避けている。2つの世界は互いに反発している。</p>
+  </div>
+</section>
+
+<section class="sec">
+  <h2><span class="num">7</span>個店の集積は土地の性質では説明できない</h2>
+  <p class="note">門前町・城下町・港町・温泉街・アーケード商店街——どれも「昔からそこに人が集まる理由があった場所」だが、説明力はほとんど無かった。残差にはポアソンのばらつきが混ざるので、同じ見込みから作った乱数と分散を比べて「そもそも説明できる分」で割り直した値。</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>業種</th><th>説明できる分</th><th>地形･歴史＋用途地域</th><th>隣のマス</th></tr></thead>
+    <tbody>
+      <tr><td>居酒屋・バー</td><td>52%</td><td class="flat">10%</td><td class="up">18%</td></tr>
+      <tr><td>美容・理容</td><td>32%</td><td class="flat">13%</td><td class="up">31%</td></tr>
+      <tr><td>カフェ</td><td>29%</td><td class="flat">14%</td><td class="up">31%</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="why">
+    <p>土地の性質より「隣に何があるか」のほうが2倍以上説明力が大きく、それでも合計3割前後。<strong>その場所に先に誰かが店を出したという事実そのものが最大の説明変数</strong>だった。「なぜここに建てたのか」の答えは、土地を調べても出てこない。</p>
+  </div>
+</section>
+
+<section class="sec">
+  <h2><span class="num">8</span>1店あたり人口は全国でほぼ同じ</h2>
+  <div class="scroll">
+  <table>
+    <caption>コンビニ1店あたりの人口（人）</caption>
+    <thead><tr><th>沖縄</th><th>愛知</th><th>秋田</th><th>佐賀</th><th>長崎</th><th>福岡</th><th>宮崎</th></tr></thead>
+    <tbody><tr><td>1,613</td><td>1,854</td><td>1,867</td><td>1,912</td><td>2,010</td><td>2,033</td><td>2,055</td></tr></tbody>
+  </table>
+  </div>
+  <p class="note">人口密度も車依存度も産業構造もまるで違う県で1.3倍の幅に収まる。閉店した711店から測った閾値（周辺の1店あたり人口が2,200人を割ると閉店率が跳ね上がる）は、特定の地域の事情ではなさそうだった。</p>
+</section>
+
+<section class="sec">
+  <h2>できないこと</h2>
+  <div class="limits">
+  <ul>
+    <li><strong>閉店は予測できない</strong>（AUC 0.61）。しかも多変量が単変量に負ける。さらに Foursquare の <code>date_closed</code> は現実の閉店を測っていない——人口が減る県ほど閉店が多いはずなのに相関が <strong>+0.44</strong> と符号が逆で、閉店年が2017-18年に山を作る（愛知の閉店の68.5%）。データ側の一括整理とみられる</li>
+    <li><strong>大都市圏のコンビニは当たらない。</strong>周辺人口密度で 5.7倍（500人/km²未満）から 2.3倍（6,000人/km²以上）まで単調に落ちる。密集地だけで学習し直しても直らない。ただし<strong>スーパーは都心でも4.7倍を保つ</strong>ので、一律に大都市圏を外すのは誤り</li>
+    <li><strong>飲食では素朴な対抗馬に勝てない。</strong>「既存店舗数で並べるだけ」と互角。飲食の新店は85.5%が既に店のある場所に出るので、何で並べても当たるため</li>
+    <li><strong>7.5倍には「都市と田舎を分ける」ぶんが入っている。</strong>密集度をそろえて測ると2.5〜4.6倍。1つの街の中で場所を選ぶ用途ならこちらが実力</li>
+  </ul>
+  </div>
+</section>
+
+<section class="sec">
+  <h2>測り方</h2>
+  <p class="body"><strong>物差しは「まだ1店も無いマスの中での順位づけ」に定めた。</strong>「どこに店があるか」は既存店舗数で並べるだけで当たるのでモデルの仕事ではない。まだ1店も無いマスでは対抗馬が全マス0で並ぶため原理的に順位をつけられず、そこがモデルの持ち場になる。</p>
+  <p class="body">全メッシュのAUCは「田んぼの真ん中に店は無い」という自明な当たりで水増しされる（0.87）。判断が要る市街地（周辺人口3,000人以上）に絞ると 0.77〜0.82 に落ちる。以後こちらを使った。</p>
+  <p class="body">検証はすべて空間ホールドアウト（県を丸ごと隠して学習）と、実際の新規開店による前向き検証（新店を差し引いてから学習し直した汚染ゼロの条件）。<strong>倍率を出すときは必ず素朴な対抗馬を並記する。</strong>でたらめ（1.0倍）は対抗馬ではない。「今すでにそこにある量」で並べたものが最低限の対抗馬になる。実際、飲食ではその対抗馬に負けた。置かなければ「8倍で当たる」と書いて終わっていた。</p>
+</section>
+
+<section class="sec">
+  <h2>物差しをいつ決めたか</h2>
+  <p class="note">この研究の一番弱いところなので明記する。物差しは、結果を見たあとに3回変えている。</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>いつ</th><th>何を</th><th>なぜ変えたか</th></tr></thead>
+    <tbody>
+      <tr><td>当初</td><td>全メッシュのAUC</td><td>—</td></tr>
+      <tr><td>1回目</td><td>市街地に限定</td><td>0.87の大半が「田んぼに店は無い」で稼がれていた</td></tr>
+      <tr><td>2回目</td><td>まだ1店も無いマスに限定</td><td>素朴な対抗馬に飲食で負けたため</td></tr>
+      <tr class="dim"><td>3回目</td><td>コンビニは人口密度1,500人/km²未満</td><td>密集地で倍率が2.3倍まで落ちるため</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="why">
+    <p>答案を見てから採点器を直すのは、<strong>測ろうとしている差より改訂のほうが大きく点数を動かす</strong>危険がある。この研究では次のように切り分けた。</p>
+    <p><strong>1回目と2回目は福岡県のデータ（開店143件）を見ながら決め、そのあと物差しを変えずに他46県（開店2,548件）で測った。</strong>福岡7.2倍・全国7.5倍で一致している。物差しを決めた標本と、確かめた標本が別になっている。</p>
+    <p><strong>3回目（密度1,500人/km²）は全国のデータを見て決めており、独立に確かめていない。</strong>この閾値だけは「当てはめた値」であって「検証した値」ではない。7.5倍という数字は標本の外で確認できているが、適用範囲の線引きは確認できていない。</p>
+  </div>
+</section>
+
+<footer>
+  <p>データ源（すべて再配布可・スクレイピング不要）</p>
+  <ul>
+    <li>店舗 ── Foursquare OS Places（Apache 2.0）</li>
+    <li>人口・土地利用・用途地域・地価・駅乗降客数 ── 国土数値情報</li>
+    <li>従業者数 ── e-Stat 統計GIS 経済センサス活動調査 500mメッシュ（T000918）</li>
+    <li>道路・駅・地形の目印 ── OpenStreetMap（Geofabrik の地域抽出）</li>
+    <li>昼夜間人口比 ── 統計ダッシュボード API</li>
+    <li>開店 ── 国税庁 酒類販売業免許の新規取得者名等一覧／厚生労働省 食品衛生申請等システム／厚生局 コード内容別医療機関一覧表</li>
+  </ul>
+  <p style="margin-top:14px">酒販免許は国税局ごとに8〜12か月ぶんしか残らず、食品衛生申請等システムは上書き更新される。どちらも取り逃したら二度と手に入らないので、毎月取得して版を積んでいる。</p>
+</footer>
+</div>

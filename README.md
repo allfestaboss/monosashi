@@ -13,6 +13,18 @@ build.py                外枠をかぶせて dist/ を作る
 deploy.sh               dist/ を VPS に転送してコンテナを差し替える
 ```
 
+## サブドメイン
+
+職種は `/cad/` `/kanzei/` のようにパスで切る。**同じ物差しで測ったものだから**。
+同じ物差しで測っていないものは、パスに混ぜると構造が壊れるのでサブドメインに出す。
+
+| サブドメイン | 中身 | 正本 |
+|---|---|---|
+| [shoken.monosashi.work](https://shoken.monosashi.work/) | 商圏モデル（被験者は日本の店舗立地であってAIではない） | [allfestaboss/shoken-model](https://github.com/allfestaboss/shoken-model) |
+
+版ドリフトの仕組みは職種と同じものを使う（`site-shoken/reviewed.json`）。
+生成は `build.py` が `dist-shoken/` に出し、`deploy-shoken.sh` が別コンテナで出す。
+
 ## 撤回をどう出しているか
 
 ベンチは版を出し続け、ときに結果を撤回する。サイトがそれを写して持つと

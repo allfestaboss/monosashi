@@ -1,0 +1,8 @@
+{
+  "bench": "shoken-model",
+  "version": "1.0.0",
+  "date": "2026-08-19",
+  "note": "初版。本文は v1.0.0 の測定結果そのもの。",
+  "acknowledged": "1.0.0",
+  "ack_date": "2026-08-19"
+}

@@ -36,12 +36,22 @@ def _key(v):
 
 
 def bench_state(name):
-    """ベンチの現行版・DOI・版段落を読む。読めなければ None。"""
-    repo = BENCH / name
+    """ベンチの現行版・DOI・版段落を読む。読めなければ None。
+
+    多くは big-business/ の下にあるが、そこに無いものもある
+    （shoken-model は 01_projects 直下で、公開用の複製は -public 付き）。
+    見つかった最初の場所を使う。
+    """
+    # 公開用の複製(-public)を作業リポジトリより先に見る。
+    # 発行済みDOIは公開側にしか書き戻らないので、順序を逆にすると DOI が None になる（踏んだ）。
+    for cand in (BENCH / name, ROOT.parent / f"{name}-public", ROOT.parent / name):
+        if (cand / "CITATION.cff").exists() and (cand / ".zenodo.json").exists():
+            repo = cand
+            break
+    else:
+        return None
     cff = repo / "CITATION.cff"
     zj = repo / ".zenodo.json"
-    if not cff.exists() or not zj.exists():
-        return None
     t = cff.read_text(encoding="utf-8")
     ver = re.search(r'^version:\s*"?([^"\s]+)"?', t, re.M)
     doi = re.search(r'^doi:\s*"?([^"\s]+)"?', t, re.M)
@@ -59,8 +69,10 @@ def bench_state(name):
     }
 
 
-def version_notice(slug):
+def version_notice(slug, site_dir=None, bench_name=None):
     """版の対応を出す。(HTML, 関門を落とすか) を返す。
+
+    site_dir を渡すとサブドメイン用の置き場を見る（既定は site/<slug>/）。
 
     **reviewed.json は2欄を別々に持つ。1欄で兼ねてはいけない。**
 
@@ -75,11 +87,11 @@ def version_notice(slug):
     要約した瞬間に二重管理が復活する。読みにくくても原文のほうが正しい。
     枠の日本語は全て変数の差し込みで、こちらが書いた文は1つも無い。
     """
-    mark_path = SITE / slug / "reviewed.json"
+    mark_path = (site_dir or SITE / slug) / "reviewed.json"
     if not mark_path.exists():
         return "", False
     mark = json.loads(mark_path.read_text(encoding="utf-8"))
-    st = bench_state(mark["bench"])
+    st = bench_state(bench_name or mark["bench"])
     if st is None or not st["version"]:
         return "", False
 
@@ -169,6 +181,57 @@ def wrap(body_html, title, desc, notice=""):
 </html>"""
 
 
+# --- サブドメイン ---------------------------------------------------------
+# 職種はパスで切る（同じ物差しで測ったものだから）。
+# 商圏モデルは**同じ物差しで測っていない**——被験者がAIではなく日本の店舗立地なので、
+# パスに混ぜると「同じ物差し」が壊れる。だからサブドメインに出して、
+# 同じ家の別棟であることを構造で示す。
+SUBSITES = [
+    {
+        "slug": "shoken",
+        "src": ROOT / "site-shoken" / "body.html",
+        "dist": ROOT / "dist-shoken",
+        "bench": "shoken-model",
+        "title": "どこかは当たる、何かは当たらない",
+        "desc": "全国471,024メッシュ・30業種で測った店舗立地の予測可能性。",
+        "repo": "https://github.com/allfestaboss/shoken-model",
+    },
+]
+
+SUBNAV = """<nav class="site-nav">
+  <a class="brand" href="https://monosashi.work/">物差し</a>
+  <span class="navlinks">
+    <a href="{repo}">コードとデータ</a><a href="https://monosashi.work/">AI実務到達度インデックス</a>
+  </span>
+</nav>"""
+
+
+def build_subsites():
+    """サブドメインのページを作る。版ドリフトの仕組みは職種と同じものを使う。"""
+    global NAV
+    stale = []
+    for cfg in SUBSITES:
+        if not cfg["src"].exists():
+            print(f"  ! {cfg['slug']}: body.html が無い")
+            continue
+        notice, behind = version_notice(cfg["slug"], site_dir=ROOT / f"site-{cfg['slug']}",
+                                        bench_name=cfg["bench"])
+        if behind:
+            stale.append(cfg["slug"])
+        cfg["dist"].mkdir(parents=True, exist_ok=True)
+        keep, NAV = NAV, SUBNAV.format(repo=cfg["repo"])
+        try:
+            html = wrap(cfg["src"].read_text(encoding="utf-8"),
+                        cfg["title"], cfg["desc"], notice)
+        finally:
+            NAV = keep
+        (cfg["dist"] / "index.html").write_text(html, encoding="utf-8")
+        print(f"  {cfg['slug']}.monosashi.work  "
+              f"{(cfg['dist']/'index.html').stat().st_size/1e3:.0f} KB"
+              f"{'  ← 版が進んでいる' if behind else ''}")
+    return stale
+
+
 def main():
     DIST.mkdir(exist_ok=True)
     stale = []
@@ -202,6 +265,7 @@ def main():
               f"{(out/'index.html').stat().st_size/1e3:.0f} KB")
 
     build_changes()
+    stale += build_subsites()
 
     tot = sum(p.stat().st_size for p in DIST.rglob("*.html"))
     print(f"→ {DIST}  {len(list(DIST.rglob('*.html')))} ページ / {tot/1e3:.0f} KB")
